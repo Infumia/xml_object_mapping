@@ -2,7 +2,7 @@
 
 [![Pub Version](https://img.shields.io/pub/v/xml_object_mapping)](https://pub.dev/packages/xml_object_mapping)
 
-A Dart library for mapping XML data to Dart objects using annotations. Inspired by JSON serialization patterns, 
+A Dart library for mapping XML data to Dart objects using annotations. Inspired by JSON serialization patterns,
 this package eliminates boilerplate XML parsing code.
 
 ## Features
@@ -78,17 +78,17 @@ This generates `XmlUserMapper`. Use it to parse XML from various sources:
 
 ```dart
 void main() async {
-// Parse from file path
-  final user1 = await XmlUserMapper.parse(path: 'data/user.xml');
+    // Parse from file path
+    final user1 = await XmlUserMapper.parse(path: 'data/user.xml');
 
-// Parse from File object
-  final user2 = await XmlUserMapper.parse(file: File('data/user.xml'));
+    // Parse from File object
+    final user2 = await XmlUserMapper.parse(file: File('data/user.xml'));
 
-// Parse from XML string
-  final user3 = await XmlUserMapper.parse(text: xmlText);
-
-// Parse from XElement
-  final user4 = await XmlUserMapper.parse(xmlElement: xmlElement);
+    // Parse from XML string
+    final user3 = await XmlUserMapper.parse(text: xmlText);
+    
+    // Parse from XElement
+    final user4 = await XmlUserMapper.parse(xmlElement: xmlElement);
 }
 ```
 
