@@ -1,0 +1,16 @@
+name: xml_object_mapping_example
+description: Example of using xml_object_mapping.
+publish_to: none
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  xml: ^6.6.1
+  xml_object_mapping:
+    path: ../packages/xml_object_mapping
+
+dev_dependencies:
+  build_runner: ^2.4.6
+  xml_object_mapping_generator:
+    path: ../packages/xml_object_mapping_generator
