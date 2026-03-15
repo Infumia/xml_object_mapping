@@ -183,6 +183,11 @@ class Book {
 
 ### Custom Converters
 
+```xml
+<product>
+  <price>$19.99</price>
+</product>
+```
 ```dart
 class Product {
   @XmlElement(converter: PriceConverter())
