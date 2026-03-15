@@ -226,7 +226,7 @@ class PriceConverter implements XmlConverter<double> {
   const PriceConverter();
 
   @override
-  double convert(String value) => double.parse(value.replaceAll('\$', ''));
+  double convert(String value) => double.parse(value.replaceAll(r"$", ""));
 }
 ```
 
