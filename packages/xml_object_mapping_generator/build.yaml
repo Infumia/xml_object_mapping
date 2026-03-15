@@ -6,4 +6,5 @@ builders:
     build_extensions:
       { ".dart": [ ".xml_mapper.g.dart" ] }
     auto_apply: dependents
-    build_to: source
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
