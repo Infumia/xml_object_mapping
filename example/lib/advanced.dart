@@ -2,23 +2,16 @@ import "package:xml_object_mapping/xml_object_mapping.dart";
 
 part "advanced.g.dart";
 
-enum ProjectStatus {
-  planning,
-  active,
-  completed,
-  onHold;
-}
+enum ProjectStatus { planning, active, completed, onHold }
 
 class ProjectStatusConverter extends XmlConverter<ProjectStatus> {
   const ProjectStatusConverter();
 
   @override
-  ProjectStatus convert(String value) {
-    return ProjectStatus.values.firstWhere(
-      (e) => e.name.toLowerCase() == value.toLowerCase(),
-      orElse: () => ProjectStatus.planning,
-    );
-  }
+  ProjectStatus convert(String value) => ProjectStatus.values.firstWhere(
+    (e) => e.name.toLowerCase() == value.toLowerCase(),
+    orElse: () => ProjectStatus.planning,
+  );
 
   @override
   String serialize(ProjectStatus value) => value.name;
@@ -69,11 +62,7 @@ class Task {
   @XmlMapAttribute(overrideName: "completed")
   final bool isDone;
 
-  Task({
-    required this.id,
-    required this.description,
-    this.isDone = false,
-  });
+  Task({required this.id, required this.description, this.isDone = false});
 
   @override
   String toString() =>
