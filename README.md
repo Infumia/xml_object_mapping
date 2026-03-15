@@ -71,9 +71,9 @@ final user4 = await XmlUserMapper.parse(xmlElement: xmlElement);
 
 | Annotation                      | Description |
 |---------------------------------|-------------|
-| `@XmlElement({String? name})`   | Maps an XML element to a field |
-| `@XmlAttribute({String? name})` | Maps an XML attribute to a field |
-| `@XmlList({String? name})`      | Maps repeated elements to a `List` field |
+| `@XmlElement({String? overrideName})`   | Maps an XML element to a field |
+| `@XmlAttribute({String? overrideName})` | Maps an XML attribute to a field |
+| `@XmlList({String? overrideName})`      | Maps repeated elements to a `List` field |
 | `@XmlIgnore()`                  | Excludes a field from mapping |
 
 ## Advanced Usage
@@ -102,7 +102,7 @@ class Address {
 
 ```dart
 class Library {
-  @XmlList(name: 'book')
+  @XmlList(overrideName: 'book')
   final List<Book> books;
 
   Library({required this.books});
