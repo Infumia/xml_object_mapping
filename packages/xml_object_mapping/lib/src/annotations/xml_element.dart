@@ -1,4 +1,4 @@
-import "package:xml_object_mapping/src/annotations/xml_converter.dart";
+import "package:xml_object_mapping/xml_object_mapping.dart";
 
 /// Maps an XML element to a field.
 class XmlElement {
