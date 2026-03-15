@@ -22,23 +22,27 @@ sealed class XmlFieldAnnotation {
   XmlFieldAnnotation(this.field, this.converterInstance);
 }
 
-/// Represents a field annotated with `@XmlElement`.
-class XmlElementAnnotation extends XmlFieldAnnotation {
+/// Represents a field annotated with `@XmlMapElement`.
+class XmlMapElementAnnotation extends XmlFieldAnnotation {
   /// The override name for the XML element.
   final String? overrideName;
 
-  XmlElementAnnotation(super.field, super.converterInstance, this.overrideName);
+  XmlMapElementAnnotation(
+    super.field,
+    super.converterInstance,
+    this.overrideName,
+  );
 
   /// The name to use for the XML element.
   String get elementName => overrideName ?? fieldName;
 }
 
-/// Represents a field annotated with `@XmlAttribute`.
-class XmlAttributeAnnotation extends XmlFieldAnnotation {
+/// Represents a field annotated with `@XmlMapAttribute`.
+class XmlMapAttributeAnnotation extends XmlFieldAnnotation {
   /// The override name for the XML attribute.
   final String? overrideName;
 
-  XmlAttributeAnnotation(
+  XmlMapAttributeAnnotation(
     super.field,
     super.converterInstance,
     this.overrideName,
@@ -48,20 +52,20 @@ class XmlAttributeAnnotation extends XmlFieldAnnotation {
   String get attributeName => overrideName ?? fieldName;
 }
 
-/// Represents a field annotated with `@XmlValue`.
-class XmlValueAnnotation extends XmlFieldAnnotation {
-  XmlValueAnnotation(super.field, super.converterInstance);
+/// Represents a field annotated with `@XmlMapValue`.
+class XmlMapValueAnnotation extends XmlFieldAnnotation {
+  XmlMapValueAnnotation(super.field, super.converterInstance);
 }
 
-/// Represents a field annotated with `@XmlList`.
-class XmlListAnnotation extends XmlFieldAnnotation {
+/// Represents a field annotated with `@XmlMapList`.
+class XmlMapListAnnotation extends XmlFieldAnnotation {
   /// The name of the child elements.
   final String childName;
 
   /// The override name for the parent XML element.
   final String? overrideName;
 
-  XmlListAnnotation(
+  XmlMapListAnnotation(
     super.field,
     super.converterInstance,
     this.childName,
@@ -72,9 +76,9 @@ class XmlListAnnotation extends XmlFieldAnnotation {
   String get elementName => overrideName ?? fieldName;
 }
 
-/// Represents a field annotated with `@XmlIgnore`.
-class XmlIgnoreAnnotation extends XmlFieldAnnotation {
-  XmlIgnoreAnnotation(super.field, super.converterInstance);
+/// Represents a field annotated with `@XmlMapIgnore`.
+class XmlMapIgnoreAnnotation extends XmlFieldAnnotation {
+  XmlMapIgnoreAnnotation(super.field, super.converterInstance);
 }
 
 /// Represents a parsed class for code generation.

@@ -46,12 +46,12 @@ import "package:xml_object_mapping/xml_object_mapping.dart";
 
 part "user.g.dart";
 
-@xml
+@xmlMap
 class User {
-  @XmlAttribute()
+  @XmlMapAttribute()
   final int id;
 
-  @XmlElement(overrideName: "nameSurname")
+  @XmlMapElement(overrideName: "nameSurname")
   final String name;
 
   final String email;
@@ -94,14 +94,14 @@ void main() {
 
 ## Annotations
 
-| Annotation                                                                     | Description                                   |
-|--------------------------------------------------------------------------------|-----------------------------------------------|
-| `@xml`                                                                         | Marks a class for XML mapping code generation |
-| `@XmlValue({XmlConverter? converter})`                                         | Maps the content of an XML element to a field |
-| `@XmlElement({String? overrideName, XmlConverter? converter})`                 | Maps an XML element to a field                |
-| `@XmlAttribute({String? overrideName, XmlConverter? converter})`               | Maps an XML attribute to a field              |
-| `@XmlList({String? overrideName, String? childName, XmlConverter? converter})` | Maps repeated elements to a `List` field      |
-| `@XmlIgnore()`                                                                 | Excludes a field from mapping                 |
+| Annotation                                                                        | Description                                   |
+|-----------------------------------------------------------------------------------|-----------------------------------------------|
+| `@XmlMap`                                                                         | Marks a class for XML mapping code generation |
+| `@XmlMapValue({XmlConverter? converter})`                                         | Maps the content of an XML element to a field |
+| `@XmlMapElement({String? overrideName, XmlConverter? converter})`                 | Maps an XML element to a field                |
+| `@XmlMapAttribute({String? overrideName, XmlConverter? converter})`               | Maps an XML attribute to a field              |
+| `@XmlMapList({String? overrideName, String? childName, XmlConverter? converter})` | Maps repeated elements to a `List` field      |
+| `@XmlMapIgnore()`                                                                 | Excludes a field from mapping                 |
 
 ## Supported Types
 
@@ -133,7 +133,7 @@ For other types, use custom converters (see below).
 ```
 
 ```dart
-@xml
+@xmlMap
 class Company {
   final String name;
 
@@ -142,7 +142,7 @@ class Company {
   Company({required this.name, required this.address});
 }
 
-@xml
+@xmlMap
 class Address {
   final String street;
 
@@ -164,9 +164,9 @@ class Address {
 ```
 
 ```dart
-@xml
+@xmlMap
 class Library {
-  @XmlList(childName: 'bookName')
+  @XmlMapList(childName: 'bookName')
   final List<String> books;
 
   Library({required this.books});
@@ -193,15 +193,15 @@ class Library {
 ```
 
 ```dart
-@xml
+@xmlMap
 class Bookstore {
-  @XmlList(childName: 'book')
+  @XmlMapList(childName: 'book')
   final List<Book> books;
 
   Bookstore({required this.books});
 }
 
-@xml
+@xmlMap
 class Book {
   final String title;
 
@@ -222,9 +222,9 @@ class Book {
 ```
 
 ```dart
-@xml
+@xmlMap
 class Product {
-  @XmlElement(converter: PriceConverter())
+  @XmlMapElement(converter: PriceConverter())
   final double price;
 
   Product({required this.price});
@@ -240,7 +240,7 @@ class PriceConverter implements XmlConverter<double> {
 
 ### Map Types
 
-Use `@XmlList` with a map-like structure for key-value pairs:
+Use `@XmlMapList` with a map-like structure for key-value pairs:
 
 ```xml
 <config>
@@ -252,20 +252,20 @@ Use `@XmlList` with a map-like structure for key-value pairs:
 ```
 
 ```dart
-@xml
+@xmlMap
 class Config {
-  @XmlList(childName: 'entry')
+  @XmlMapList(childName: 'entry')
   final List<PropertyEntry> properties;
 
   Config({required this.properties});
 }
 
-@xml
+@xmlMap
 class PropertyEntry {
-  @XmlAttribute()
+  @XmlMapAttribute()
   final String key;
 
-  @XmlValue()
+  @XmlMapValue()
   final int value;
 
   PropertyEntry({required this.key, required this.value});

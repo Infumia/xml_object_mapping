@@ -10,46 +10,46 @@ class XmlMappingException implements Exception {
 }
 
 /// Exception thrown when XML format is invalid.
-class XmlFormatException implements Exception {
+class XmlMappingFormatException implements Exception {
   /// The error message.
   final String message;
 
-  const XmlFormatException(this.message);
+  const XmlMappingFormatException(this.message);
 
   @override
-  String toString() => "XmlFormatException: $message";
+  String toString() => "XmlMappingFormatException: $message";
 }
 
 /// Exception thrown when XML parsing fails.
-class XmlParserException implements Exception {
+class XmlMappingParserException implements Exception {
   /// The error message.
   final String message;
 
-  const XmlParserException(this.message);
+  const XmlMappingParserException(this.message);
 
   @override
-  String toString() => "XmlParserException: $message";
+  String toString() => "XmlMappingParserException: $message";
 }
 
 /// Exception thrown when a required XML element or attribute is missing.
-class XmlMissingElementException implements Exception {
+class XmlMappingMissingElementException implements Exception {
   /// The name of the missing element or attribute.
   final String name;
 
   /// The class name where the element is expected.
   final String className;
 
-  const XmlMissingElementException(this.name, this.className);
+  const XmlMappingMissingElementException(this.name, this.className);
 
   String get message =>
       'Missing required element/attribute "$name" in class "$className"';
 
   @override
-  String toString() => "XmlMissingElementException: $message";
+  String toString() => "XmlMappingMissingElementException: $message";
 }
 
 /// Exception thrown when a type conversion fails.
-class XmlTypeConversionException implements Exception {
+class XmlMappingTypeConversionException implements Exception {
   /// The value that failed to convert.
   final String value;
 
@@ -59,11 +59,15 @@ class XmlTypeConversionException implements Exception {
   /// The optional error message.
   final String? reason;
 
-  const XmlTypeConversionException(this.value, this.targetType, {this.reason});
+  const XmlMappingTypeConversionException(
+    this.value,
+    this.targetType, {
+    this.reason,
+  });
 
   String get message =>
       'Failed to convert "$value" to $targetType${reason != null ? ": $reason" : ""}';
 
   @override
-  String toString() => "XmlTypeConversionException: $message";
+  String toString() => "XmlMappingTypeConversionException: $message";
 }

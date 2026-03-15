@@ -10,37 +10,37 @@ import "package:xml_object_mapping_generator/xml_object_mapping_generator.dart";
 class XmlAnnotationReader {
   /// The type checker for `@xml` annotation.
   static const _xmlTypeChecker = TypeChecker.typeNamed(
-    Xml,
+    XmlMap,
     inPackage: "xml_object_mapping",
   );
 
-  /// The type checker for `@XmlElement` annotation.
-  static const _xmlElementTypeChecker = TypeChecker.typeNamed(
-    XmlElement,
+  /// The type checker for `@XmlMapElement` annotation.
+  static const _elementTypeChecker = TypeChecker.typeNamed(
+    XmlMapElement,
     inPackage: "xml_object_mapping",
   );
 
-  /// The type checker for `@XmlAttribute` annotation.
-  static const _xmlAttributeTypeChecker = TypeChecker.typeNamed(
-    XmlAttribute,
+  /// The type checker for `@XmlMapAttribute` annotation.
+  static const _attributeTypeChecker = TypeChecker.typeNamed(
+    XmlMapAttribute,
     inPackage: "xml_object_mapping",
   );
 
-  /// The type checker for `@XmlValue` annotation.
-  static const _xmlValueTypeChecker = TypeChecker.typeNamed(
-    XmlValue,
+  /// The type checker for `@XmlMapValue` annotation.
+  static const _valueTypeChecker = TypeChecker.typeNamed(
+    XmlMapValue,
     inPackage: "xml_object_mapping",
   );
 
-  /// The type checker for `@XmlList` annotation.
-  static const _xmlListTypeChecker = TypeChecker.typeNamed(
-    XmlList,
+  /// The type checker for `@XmlMapList` annotation.
+  static const _listTypeChecker = TypeChecker.typeNamed(
+    XmlMapList,
     inPackage: "xml_object_mapping",
   );
 
-  /// The type checker for `@XmlIgnore` annotation.
-  static const _xmlIgnoreTypeChecker = TypeChecker.typeNamed(
-    XmlIgnore,
+  /// The type checker for `@XmlMapIgnore` annotation.
+  static const _ignoreTypeChecker = TypeChecker.typeNamed(
+    XmlMapIgnore,
     inPackage: "xml_object_mapping",
   );
 
@@ -62,33 +62,33 @@ class XmlAnnotationReader {
       allFields.add(field);
 
       // Check for annotations
-      final xmlElement = _xmlElementTypeChecker.firstAnnotationOf(field);
-      if (xmlElement != null) {
-        fields.add(_parseXmlElement(field, xmlElement));
+      final element = _elementTypeChecker.firstAnnotationOf(field);
+      if (element != null) {
+        fields.add(_parseXmlElem(field, element));
         continue;
       }
 
-      final xmlAttribute = _xmlAttributeTypeChecker.firstAnnotationOf(field);
-      if (xmlAttribute != null) {
-        fields.add(_parseXmlAttribute(field, xmlAttribute));
+      final attribute = _attributeTypeChecker.firstAnnotationOf(field);
+      if (attribute != null) {
+        fields.add(_parseXmlAttr(field, attribute));
         continue;
       }
 
-      final xmlValue = _xmlValueTypeChecker.firstAnnotationOf(field);
-      if (xmlValue != null) {
-        fields.add(_parseXmlValue(field, xmlValue));
+      final value = _valueTypeChecker.firstAnnotationOf(field);
+      if (value != null) {
+        fields.add(_parseXmlValue(field, value));
         continue;
       }
 
-      final xmlList = _xmlListTypeChecker.firstAnnotationOf(field);
-      if (xmlList != null) {
-        fields.add(_parseXmlList(field, xmlList));
+      final list = _listTypeChecker.firstAnnotationOf(field);
+      if (list != null) {
+        fields.add(_parseXmlList(field, list));
         continue;
       }
 
-      final xmlIgnore = _xmlIgnoreTypeChecker.firstAnnotationOf(field);
-      if (xmlIgnore != null) {
-        fields.add(XmlIgnoreAnnotation(field, null));
+      final ignore = _ignoreTypeChecker.firstAnnotationOf(field);
+      if (ignore != null) {
+        fields.add(XmlMapIgnoreAnnotation(field, null));
         continue;
       }
 
@@ -98,47 +98,46 @@ class XmlAnnotationReader {
     return XmlClassModel(element, fields, allFields);
   }
 
-  static XmlElementAnnotation _parseXmlElement(
+  static XmlMapElementAnnotation _parseXmlElem(
     FieldElement field,
     DartObject annotation,
   ) {
     final overrideName = _getStringAnnotationParam(annotation, "overrideName");
     final converter = _getConverterInstance(annotation);
-    return XmlElementAnnotation(field, converter, overrideName);
+    return XmlMapElementAnnotation(field, converter, overrideName);
   }
 
-  static XmlAttributeAnnotation _parseXmlAttribute(
+  static XmlMapAttributeAnnotation _parseXmlAttr(
     FieldElement field,
     DartObject annotation,
   ) {
     final overrideName = _getStringAnnotationParam(annotation, "overrideName");
     final converter = _getConverterInstance(annotation);
-    return XmlAttributeAnnotation(field, converter, overrideName);
+    return XmlMapAttributeAnnotation(field, converter, overrideName);
   }
 
-  static XmlValueAnnotation _parseXmlValue(
+  static XmlMapValueAnnotation _parseXmlValue(
     FieldElement field,
     DartObject annotation,
   ) {
     final converter = _getConverterInstance(annotation);
-    return XmlValueAnnotation(field, converter);
+    return XmlMapValueAnnotation(field, converter);
   }
 
-  static XmlListAnnotation _parseXmlList(
+  static XmlMapListAnnotation _parseXmlList(
     FieldElement field,
     DartObject annotation,
   ) {
     final childName = _getStringAnnotationParam(annotation, "childName")!;
     final overrideName = _getStringAnnotationParam(annotation, "overrideName");
     final converter = _getConverterInstance(annotation);
-    return XmlListAnnotation(field, converter, childName, overrideName);
+    return XmlMapListAnnotation(field, converter, childName, overrideName);
   }
 
   static String? _getStringAnnotationParam(
     DartObject annotation,
     String paramName,
-  ) =>
-      annotation.getField(paramName)?.toStringValue();
+  ) => annotation.getField(paramName)?.toStringValue();
 
   static String? _getConverterInstance(DartObject annotation) {
     final converterField = annotation.getField("converter");

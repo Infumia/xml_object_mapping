@@ -1,15 +1,15 @@
 import "package:xml_object_mapping/xml_object_mapping.dart";
 
 /// A constant annotation instance for mapping XML attributes to fields.
-const xmlAttribute = XmlAttribute();
+const xmlMapAttribute = XmlMapAttribute();
 
 /// Maps an XML attribute to a field.
-class XmlAttribute {
+class XmlMapAttribute {
   /// Optional override name for the XML attribute.
   final String? overrideName;
 
   /// Optional custom converter for this field.
   final XmlConverter<dynamic>? converter;
 
-  const XmlAttribute({this.overrideName, this.converter});
+  const XmlMapAttribute({this.overrideName, this.converter});
 }

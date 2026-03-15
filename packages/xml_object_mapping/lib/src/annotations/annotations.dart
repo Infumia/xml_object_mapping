@@ -1,10 +1,10 @@
 /// Annotations for XML object mapping.
 library annotations;
 
+export "attribute.dart";
+export "converter.dart";
+export "element.dart";
+export "ignore.dart";
+export "list.dart";
+export "value.dart";
 export "xml.dart";
-export "xml_value.dart";
-export "xml_element.dart";
-export "xml_attribute.dart";
-export "xml_list.dart";
-export "xml_ignore.dart";
-export "xml_converter.dart";

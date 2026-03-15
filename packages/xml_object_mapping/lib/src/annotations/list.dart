@@ -1,7 +1,7 @@
 import "package:xml_object_mapping/xml_object_mapping.dart";
 
 /// Maps repeated XML elements to a `List` field.
-class XmlList {
+class XmlMapList {
   /// The name of the child elements to collect into a list.
   final String childName;
 
@@ -11,5 +11,9 @@ class XmlList {
   /// Optional custom converter for this field.
   final XmlConverter<dynamic>? converter;
 
-  const XmlList({required this.childName, this.overrideName, this.converter});
+  const XmlMapList({
+    required this.childName,
+    this.overrideName,
+    this.converter,
+  });
 }

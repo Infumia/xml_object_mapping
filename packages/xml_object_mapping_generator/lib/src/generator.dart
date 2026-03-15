@@ -2,46 +2,37 @@ import "package:analyzer/dart/element/element.dart";
 import "package:analyzer/dart/element/type.dart";
 import "package:build/build.dart";
 import "package:code_builder/code_builder.dart";
-import "package:source_gen/source_gen.dart" hide LibraryBuilder;
+import "package:source_gen/source_gen.dart";
+import "package:xml_object_mapping/xml_object_mapping.dart";
 import "package:xml_object_mapping_generator/xml_object_mapping_generator.dart";
 
 /// Generator for creating XML mapper classes from annotated Dart classes.
-class XmlMapperGenerator extends Generator {
+class XmlMapperGenerator extends GeneratorForAnnotation<XmlMap> {
   @override
-  String generate(LibraryReader library, BuildStep buildStep) {
-    final buffer = StringBuffer();
-
-    for (final element in library.allElements) {
-      if (element is! ClassElement) {
-        continue;
-      }
-      if (!XmlAnnotationReader.hasXmlAnnotation(element)) {
-        continue;
-      }
-
-      final model = XmlAnnotationReader.parseClass(element);
-      buffer.writeln(_generateMapper(model));
+  String generateForAnnotatedElement(
+    Element element,
+    ConstantReader annotation,
+    BuildStep buildStep,
+  ) {
+    if (element is! ClassElement) {
+      throw InvalidGenerationSourceError(
+        "The @xml annotation can only be applied to classes.",
+        element: element,
+      );
     }
 
-    return buffer.toString();
+    final model = XmlAnnotationReader.parseClass(element);
+    final mapperClass = _buildMapperClass(model);
+
+    final emitter = DartEmitter(useNullSafetySyntax: true);
+
+    return mapperClass.accept(emitter).toString();
   }
 
-  String _generateMapper(XmlClassModel model) {
+  Class _buildMapperClass(XmlClassModel model) {
     final mapperName = "Xml${model.className}Mapper";
     final className = model.className;
 
-    final library = LibraryBuilder();
-    library.ignoreForFile.add("unused_import");
-    library.ignoreForFile.add("unnecessary_cast");
-
-    // Add imports
-    library.body.addAll([
-      Directive.import("dart:io"),
-      Directive.import("package:xml/xml.dart"),
-      Directive.import("package:xml_object_mapping/xml_object_mapping.dart"),
-    ]);
-
-    // Add mapper class
     final mapperClass = ClassBuilder()
       ..name = mapperName
       ..modifier = ClassModifier.final$;
@@ -61,14 +52,7 @@ class XmlMapperGenerator extends Generator {
       _buildExtractMethod(model),
     ]);
 
-    library.body.add(mapperClass.build());
-
-    final emitter = DartEmitter(
-      orderDirectives: true,
-      useNullSafetySyntax: true,
-    );
-
-    return library.build().accept(emitter).toString();
+    return mapperClass.build();
   }
 
   Method _buildParseFromTextMethod(String mapperName, String className) =>
@@ -92,22 +76,24 @@ class XmlMapperGenerator extends Generator {
                 ..named = true,
             ),
           )
-          ..body = Code('''
-final document = XmlDocument.parse(text);
-final element = document.rootElement;
+          ..body = Block.of([
+            const Code("final document = XmlDocument.parse(text);"),
+            const Code("final element = document.rootElement;"),
+            const Code(r'''
 if (rootName != null && element.name.local != rootName) {
-  throw XmlFormatException(
-    'Expected root element "\$rootName" but found "\${element.name.local}"',
+  throw XmlMappingFormatException(
+    'Expected root element "$rootName" but found "${element.name.local}"',
   );
 }
-return $mapperName._build(element);
 '''),
+            Code("return $mapperName._build(element);"),
+          ]),
       );
 
   Method _buildParseFromFileMethod(String mapperName, String className) =>
       Method(
         (b) => b
-          ..name = "parse"
+          ..name = "parseFile"
           ..static = true
           ..returns = refer(className)
           ..requiredParameters.add(
@@ -128,9 +114,9 @@ return $mapperName._build(element);
           ..body = Code("""
 try {
   final text = file.readAsStringSync();
-  return $mapperName.parse(text: text, rootName: rootName);
+  return $mapperName.parse(text, rootName: rootName);
 } on FileSystemException catch (e) {
-  throw XmlParserException('Failed to read file: \${e.message}');
+  throw XmlMappingParserException('Failed to read file: \${e.message}');
 }
 """),
       );
@@ -138,7 +124,7 @@ try {
   Method _buildParseFromPathMethod(String mapperName, String className) =>
       Method(
         (b) => b
-          ..name = "parse"
+          ..name = "parsePath"
           ..static = true
           ..returns = refer(className)
           ..requiredParameters.add(
@@ -157,14 +143,14 @@ try {
             ),
           )
           ..body = Code("""
-return $mapperName.parse(file: File(path), rootName: rootName);
+return $mapperName.parseFile(File(path), rootName: rootName);
 """),
       );
 
   Method _buildParseFromXmlElementMethod(String mapperName, String className) =>
       Method(
         (b) => b
-          ..name = "parse"
+          ..name = "parseElement"
           ..static = true
           ..returns = refer(className)
           ..requiredParameters.add(
@@ -184,7 +170,7 @@ return $mapperName.parse(file: File(path), rootName: rootName);
           )
           ..body = Code('''
 if (rootName != null && xmlElement.name.local != rootName) {
-  throw XmlFormatException(
+  throw XmlMappingFormatException(
     'Expected root element "\$rootName" but found "\${xmlElement.name.local}"',
   );
 }
@@ -196,53 +182,53 @@ return $mapperName._build(xmlElement);
     final assignments = <String>[];
 
     for (final field in model.fields) {
-      if (field is XmlIgnoreAnnotation) {
+      if (field is XmlMapIgnoreAnnotation) {
         continue;
       }
 
       final fieldName = field.fieldName;
       final fieldType = field.fieldType.getDisplayString();
       final isNullable = field.isNullable;
+      final isNested = _isXmlAnnotatedClass(field.fieldType);
 
       String extractionCode;
 
-      if (field is XmlAttributeAnnotation) {
-        final attrName = field.attributeName;
+      if (field is XmlMapAttributeAnnotation) {
         extractionCode = _buildAttributeExtraction(
           fieldName,
           fieldType,
-          attrName,
+          field.attributeName,
           className,
           isNullable,
           field.converterInstance,
+          isNested,
         );
-      } else if (field is XmlElementAnnotation) {
-        final elemName = field.elementName;
+      } else if (field is XmlMapElementAnnotation) {
         extractionCode = _buildElementExtraction(
           fieldName,
           fieldType,
-          elemName,
+          field.elementName,
           className,
           isNullable,
           field.converterInstance,
+          isNested,
         );
-      } else if (field is XmlValueAnnotation) {
+      } else if (field is XmlMapValueAnnotation) {
         extractionCode = _buildValueExtraction(
           fieldName,
           fieldType,
           className,
           isNullable,
           field.converterInstance,
+          isNested,
         );
-      } else if (field is XmlListAnnotation) {
-        final listElemName = field.elementName;
-        final childName = field.childName;
+      } else if (field is XmlMapListAnnotation) {
         extractionCode = _buildListExtraction(
           field,
           fieldName,
           fieldType,
-          listElemName,
-          childName,
+          field.elementName,
+          field.childName,
           className,
           isNullable,
           field.converterInstance,
@@ -254,7 +240,9 @@ return $mapperName._build(xmlElement);
       assignments.add(extractionCode);
     }
 
-    final fieldNames = model.allFields.map((f) => f.name).join(", ");
+    final fieldNames = model.allFields
+        .map((f) => "${f.name}: ${f.name}")
+        .join(", ");
 
     return Method(
       (b) => b
@@ -282,26 +270,47 @@ return $className($fieldNames);
     String className,
     bool isNullable,
     String? converterInstance,
+    bool isNested,
   ) {
     final attrVar = "attr_$fieldName";
     final converter = converterInstance ?? _getDefaultConverter(fieldType);
 
+    if (isNested) {
+      final nestedMapper = "Xml${fieldType.replaceAll('?', '')}Mapper";
+      if (isNullable) {
+        return '''
+final $attrVar = element.getAttribute("$attrName");
+final $fieldName = $attrVar != null ? $nestedMapper.parse($attrVar) : null;
+''';
+      } else {
+        return '''
+final $attrVar = element.getAttribute("$attrName");
+if ($attrVar == null) throw XmlMappingMissingElementException("$attrName", "$className");
+final $fieldName = $nestedMapper.parse($attrVar);
+''';
+      }
+    }
+
+    final castType = isNullable
+        ? (fieldType.endsWith("?") ? fieldType : "$fieldType?")
+        : fieldType;
+
     if (isNullable) {
       return '''
 final $attrVar = element.getAttribute("$attrName");
-final $fieldName = $attrVar != null ? ($converter.convert($attrVar) as $fieldType?) : null;
+final $fieldName = $attrVar != null ? ($converter.convert($attrVar) as $castType) : null;
 ''';
     } else {
       return '''
 final $attrVar = element.getAttribute("$attrName");
 if ($attrVar == null) {
-  throw XmlMissingElementException("$attrName", "$className");
+  throw XmlMappingMissingElementException("$attrName", "$className");
 }
 $fieldType $fieldName;
 try {
   $fieldName = $converter.convert($attrVar) as $fieldType;
 } catch (e) {
-  throw XmlTypeConversionException($attrVar, "$fieldType", reason: e.toString());
+  throw XmlMappingTypeConversionException($attrVar, "$fieldType", reason: e.toString());
 }
 ''';
     }
@@ -314,26 +323,47 @@ try {
     String className,
     bool isNullable,
     String? converterInstance,
+    bool isNested,
   ) {
     final elemVar = "elem_$fieldName";
+
+    if (isNested) {
+      final nestedMapper = "Xml${fieldType.replaceAll('?', '')}Mapper";
+      if (isNullable) {
+        return '''
+final $elemVar = element.getElement("$elemName");
+final $fieldName = $elemVar != null ? $nestedMapper.parseElement($elemVar) : null;
+''';
+      } else {
+        return '''
+final $elemVar = element.getElement("$elemName");
+if ($elemVar == null) throw XmlMappingMissingElementException("$elemName", "$className");
+final $fieldName = $nestedMapper.parseElement($elemVar);
+''';
+      }
+    }
+
     final converter = converterInstance ?? _getDefaultConverter(fieldType);
+    final castType = isNullable
+        ? (fieldType.endsWith("?") ? fieldType : "$fieldType?")
+        : fieldType;
 
     if (isNullable) {
       return '''
 final $elemVar = element.getElement("$elemName");
-final $fieldName = $elemVar != null ? ($converter.convert($elemVar.text) as $fieldType?) : null;
+final $fieldName = $elemVar != null ? ($converter.convert($elemVar.text) as $castType) : null;
 ''';
     } else {
       return '''
 final $elemVar = element.getElement("$elemName");
 if ($elemVar == null) {
-  throw XmlMissingElementException("$elemName", "$className");
+  throw XmlMappingMissingElementException("$elemName", "$className");
 }
 $fieldType $fieldName;
 try {
   $fieldName = $converter.convert($elemVar.text) as $fieldType;
 } catch (e) {
-  throw XmlTypeConversionException($elemVar.text, "$fieldType", reason: e.toString());
+  throw XmlMappingTypeConversionException($elemVar.text, "$fieldType", reason: e.toString());
 }
 ''';
     }
@@ -345,27 +375,34 @@ try {
     String className,
     bool isNullable,
     String? converterInstance,
+    bool isNested,
   ) {
+    if (isNested) {
+      final nestedMapper = "Xml${fieldType.replaceAll('?', '')}Mapper";
+      return "final $fieldName = $nestedMapper.parseElement(element);";
+    }
+
     final converter = converterInstance ?? _getDefaultConverter(fieldType);
+    final castType = isNullable
+        ? (fieldType.endsWith("?") ? fieldType : "$fieldType?")
+        : fieldType;
 
     if (isNullable) {
-      return """
-final $fieldName = element.text.isNotEmpty ? ($converter.convert(element.text) as $fieldType?) : null;
-""";
+      return "final $fieldName = element.text.isNotEmpty ? ($converter.convert(element.text) as $castType) : null;";
     } else {
       return '''
 $fieldType $fieldName;
 try {
   $fieldName = $converter.convert(element.text) as $fieldType;
 } catch (e) {
-  throw XmlTypeConversionException(element.text, "$fieldType", reason: e.toString());
+  throw XmlMappingTypeConversionException(element.text, "$fieldType", reason: e.toString());
 }
 ''';
     }
   }
 
   String _buildListExtraction(
-    XmlListAnnotation field,
+    XmlMapListAnnotation field,
     String fieldName,
     String fieldType,
     String listElemName,
@@ -386,7 +423,7 @@ try {
     if (isNestedXmlClass) {
       final itemMapperName = "Xml${itemType.element!.name}Mapper";
       return '''
-final $fieldName = element.getElement("$listElemName")?.elements
+final $fieldName = element.getElement("$listElemName")?.childElements
     .where((e) => e.name.local == "$childName")
     .map((e) => $itemMapperName._build(e))
     .toList() ?? [];
@@ -394,7 +431,7 @@ final $fieldName = element.getElement("$listElemName")?.elements
     } else {
       final converter = converterInstance ?? _getDefaultConverter(itemTypeName);
       return '''
-final $fieldName = element.getElement("$listElemName")?.elements
+final $fieldName = element.getElement("$listElemName")?.childElements
     .where((e) => e.name.local == "$childName")
     .map((e) => $converter.convert(e.text) as $itemTypeName)
     .toList() ?? [];
@@ -403,26 +440,25 @@ final $fieldName = element.getElement("$listElemName")?.elements
   }
 
   bool _isXmlAnnotatedClass(DartType type) {
-    if (type is! InterfaceType) {
-      return false;
-    }
-    final element = type.element;
+    final element = type is InterfaceType ? type.element : null;
     if (element is! ClassElement) {
       return false;
     }
     return XmlAnnotationReader.hasXmlAnnotation(element);
   }
 
-  String _getDefaultConverter(String typeName) => switch (typeName) {
-    "int" => "const IntConverter()",
-    "double" => "const DoubleConverter()",
-    "num" => "const NumConverter()",
-    "bool" => "const BoolConverter()",
-    "DateTime" => "const DateTimeConverter()",
-    _ => "const XmlValueConverter()",
-  };
+  String _getDefaultConverter(String typeName) {
+    final cleanType = typeName.replaceAll("?", "");
+    return switch (cleanType) {
+      "int" => "const IntConverter()",
+      "double" => "const DoubleConverter()",
+      "num" => "const NumConverter()",
+      "bool" => "const BoolConverter()",
+      "DateTime" => "const DateTimeConverter()",
+      _ => "const XmlValueConverter()",
+    };
+  }
 
-  // Placeholder for future extract functionality
   Method _buildExtractMethod(XmlClassModel model) => Method(
     (b) => b
       ..name = "_extract"
@@ -442,10 +478,9 @@ final $fieldName = element.getElement("$listElemName")?.elements
             ..type = refer("dynamic"),
         ),
       )
-      ..body = const Code("// Extraction logic"),
+      ..body = const Code("// Extraction logic\n"),
   );
 
-  // TODO: Implement serialization
   Method _buildToXmlMethod(XmlClassModel model, String className) => Method(
     (b) => b
       ..name = "toXml"
@@ -458,16 +493,8 @@ final $fieldName = element.getElement("$listElemName")?.elements
             ..type = refer(className),
         ),
       )
-      ..body = const Code("""
-// TODO: Implement serialization
-throw UnimplementedError('Serialization not yet implemented');
-"""),
+      ..body = const Code(
+        "// TODO: Implement serialization\nthrow UnimplementedError('Serialization not yet implemented');\n",
+      ),
   );
-}
-
-/// Default converter for String types.
-class XmlValueConverter {
-  const XmlValueConverter();
-
-  String convert(String value) => value;
 }
