@@ -79,6 +79,21 @@ final user4 = await XmlUserMapper.parse(xmlElement: xmlElement);
 | `@XmlList({String? overrideName, String? childName, XmlConverter? converter})` | Maps repeated elements to a `List` field |
 | `@XmlIgnore()`                                                                 | Excludes a field from mapping            |
 
+## Supported Types
+
+The following built-in types are supported out of the box:
+
+| Type       | Description                     |
+|------------|---------------------------------|
+| `String`   | Text content                    |
+| `int`      | Integer numbers                 |
+| `double`   | Floating-point numbers          |
+| `num`      | Any numeric type                |
+| `bool`     | Boolean values (`true`/`false`) |
+| `DateTime` | ISO 8601 date-time strings      |
+
+For other types, use custom converters (see below).
+
 ## Advanced Usage
 
 ### Nested Objects
