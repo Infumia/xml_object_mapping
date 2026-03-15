@@ -48,18 +48,22 @@ part "user.g.dart";
 
 @xmlMap
 class User {
-  @XmlMapAttribute()
+  @xmlMapAttribute
   final int id;
 
   @XmlMapElement(overrideName: "nameSurname")
   final String name;
 
+  @xmlMapElement
   final String email;
 
+  @xmlMapElement
   final String? phone;
 
+  @xmlMapElement
   final int maxItems;
 
+  @xmlMapElement
   final OrderStatus status;
 
   User({
@@ -135,8 +139,10 @@ For other types, use custom converters (see below).
 ```dart
 @xmlMap
 class Company {
+  @xmlMapElement
   final String name;
 
+  @xmlMapElement
   final Address address;
 
   Company({required this.name, required this.address});
@@ -144,8 +150,10 @@ class Company {
 
 @xmlMap
 class Address {
+  @xmlMapElement
   final String street;
 
+  @xmlMapElement
   final String city;
 
   Address({required this.street, required this.city});
@@ -203,10 +211,13 @@ class Bookstore {
 
 @xmlMap
 class Book {
+  @xmlMapElement
   final String title;
 
+  @xmlMapElement
   final String author;
 
+  @xmlMapElement
   final double price;
 
   Book({required this.title, required this.author, required this.price});
@@ -262,10 +273,10 @@ class Config {
 
 @xmlMap
 class PropertyEntry {
-  @XmlMapAttribute()
+  @xmlMapAttribute
   final String key;
 
-  @XmlMapValue()
+  @xmlMapValue
   final int value;
 
   PropertyEntry({required this.key, required this.value});
