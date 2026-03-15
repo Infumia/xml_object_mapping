@@ -96,6 +96,7 @@ void main() {
 
 | Annotation                                                                     | Description                                   |
 |--------------------------------------------------------------------------------|-----------------------------------------------|
+| `@xml`                                                                         | Marks a class for XML mapping code generation |
 | `@XmlValue({XmlConverter? converter})`                                         | Maps the content of an XML element to a field |
 | `@XmlElement({String? overrideName, XmlConverter? converter})`                 | Maps an XML element to a field                |
 | `@XmlAttribute({String? overrideName, XmlConverter? converter})`               | Maps an XML attribute to a field              |
