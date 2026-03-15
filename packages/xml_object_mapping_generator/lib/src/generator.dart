@@ -12,8 +12,12 @@ class XmlMapperGenerator extends Generator {
     final buffer = StringBuffer();
 
     for (final element in library.allElements) {
-      if (element is! ClassElement) continue;
-      if (!XmlAnnotationReader.hasXmlAnnotation(element)) continue;
+      if (element is! ClassElement) {
+        continue;
+      }
+      if (!XmlAnnotationReader.hasXmlAnnotation(element)) {
+        continue;
+      }
 
       final model = XmlAnnotationReader.parseClass(element);
       buffer.writeln(_generateMapper(model));
@@ -38,9 +42,9 @@ class XmlMapperGenerator extends Generator {
     ]);
 
     // Add mapper class
-    final mapperClass = ClassBuilder();
-    mapperClass.name = mapperName;
-    mapperClass.modifiers.add("final");
+    final mapperClass = ClassBuilder()
+      ..name = mapperName
+      ..modifier = ClassModifier.final$;
 
     // Add parse methods
     mapperClass.methods.addAll([
@@ -192,7 +196,9 @@ return $mapperName._build(xmlElement);
     final assignments = <String>[];
 
     for (final field in model.fields) {
-      if (field is XmlIgnoreAnnotation) continue;
+      if (field is XmlIgnoreAnnotation) {
+        continue;
+      }
 
       final fieldName = field.fieldName;
       final fieldType = field.fieldType.getDisplayString(
@@ -399,9 +405,13 @@ final $fieldName = element.getElement("$listElemName")?.elements
   }
 
   bool _isXmlAnnotatedClass(DartType type) {
-    if (type is! InterfaceType) return false;
+    if (type is! InterfaceType) {
+      return false;
+    }
     final element = type.element;
-    if (element is! ClassElement) return false;
+    if (element is! ClassElement) {
+      return false;
+    }
     return XmlAnnotationReader.hasXmlAnnotation(element);
   }
 
@@ -414,51 +424,47 @@ final $fieldName = element.getElement("$listElemName")?.elements
     _ => "const XmlValueConverter()",
   };
 
-  Method _buildExtractMethod(XmlClassModel model) {
-    // Placeholder for future extract functionality
-    return Method(
-      (b) => b
-        ..name = "_extract"
-        ..returns = refer("void")
-        ..static = true
-        ..requiredParameters.add(
-          Parameter(
-            (b) => b
-              ..name = "element"
-              ..type = refer("XmlElement"),
-          ),
-        )
-        ..requiredParameters.add(
-          Parameter(
-            (b) => b
-              ..name = "instance"
-              ..type = refer("dynamic"),
-          ),
-        )
-        ..body = const Code("// Extraction logic"),
-    );
-  }
+  // Placeholder for future extract functionality
+  Method _buildExtractMethod(XmlClassModel model) => Method(
+    (b) => b
+      ..name = "_extract"
+      ..returns = refer("void")
+      ..static = true
+      ..requiredParameters.add(
+        Parameter(
+          (b) => b
+            ..name = "element"
+            ..type = refer("XmlElement"),
+        ),
+      )
+      ..requiredParameters.add(
+        Parameter(
+          (b) => b
+            ..name = "instance"
+            ..type = refer("dynamic"),
+        ),
+      )
+      ..body = const Code("// Extraction logic"),
+  );
 
-  Method _buildToXmlMethod(XmlClassModel model, String className) {
-    // TODO: Implement serialization
-    return Method(
-      (b) => b
-        ..name = "toXml"
-        ..static = true
-        ..returns = refer("XmlElement")
-        ..requiredParameters.add(
-          Parameter(
-            (b) => b
-              ..name = "instance"
-              ..type = refer(className),
-          ),
-        )
-        ..body = const Code("""
+  // TODO: Implement serialization
+  Method _buildToXmlMethod(XmlClassModel model, String className) => Method(
+    (b) => b
+      ..name = "toXml"
+      ..static = true
+      ..returns = refer("XmlElement")
+      ..requiredParameters.add(
+        Parameter(
+          (b) => b
+            ..name = "instance"
+            ..type = refer(className),
+        ),
+      )
+      ..body = const Code("""
 // TODO: Implement serialization
 throw UnimplementedError('Serialization not yet implemented');
 """),
-    );
-  }
+  );
 }
 
 /// Default converter for String types.
