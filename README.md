@@ -37,6 +37,7 @@ Define your model class with annotations:
     <nameSurname>...</nameSurname>
     <email>...</email>
     <maxItems>9</maxItems>
+    <status>PROCESSING</status>
 </user>
 ```
 
@@ -58,14 +59,19 @@ class User {
 
   final int maxItems;
 
+  final OrderStatus status;
+
   User({
     required this.id,
     required this.name,
     required this.email,
+    required this.status,
     this.phone,
     this.maxItems = 10,
   });
 }
+
+enum OrderStatus { PENDING, PROCESSING, SHIPPED, DELIVERED }
 ```
 
 Run the build runner to generate the mapper:
