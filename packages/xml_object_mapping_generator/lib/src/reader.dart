@@ -54,14 +54,12 @@ class XmlAnnotationReader {
     final allFields = <FieldElement>[];
 
     for (final field in element.fields) {
-      // Skip static fields
       if (field.isStatic) {
         continue;
       }
 
       allFields.add(field);
 
-      // Check for annotations
       final element = _elementTypeChecker.firstAnnotationOf(field);
       if (element != null) {
         fields.add(_parseXmlElem(field, element));
@@ -91,8 +89,6 @@ class XmlAnnotationReader {
         fields.add(XmlMapIgnoreAnnotation(field, null));
         continue;
       }
-
-      // No annotation - field is not mapped
     }
 
     return XmlClassModel(element, fields, allFields);
@@ -144,7 +140,6 @@ class XmlAnnotationReader {
     if (converterField == null || converterField.isNull) {
       return null;
     }
-    // Return the code representation of the converter instance
     return converterField.toStringValue();
   }
 
