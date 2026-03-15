@@ -93,13 +93,13 @@ void main() {
 
 ## Annotations
 
-| Annotation                                                                     | Description                                        |
-|--------------------------------------------------------------------------------|----------------------------------------------------|
-| `@XmlValue({XmlConverter? converter})`                                         | Maps the text content of an XML element to a field |
-| `@XmlElement({String? overrideName, XmlConverter? converter})`                 | Maps an XML element to a field                     |
-| `@XmlAttribute({String? overrideName, XmlConverter? converter})`               | Maps an XML attribute to a field                   |
-| `@XmlList({String? overrideName, String? childName, XmlConverter? converter})` | Maps repeated elements to a `List` field           |
-| `@XmlIgnore()`                                                                 | Excludes a field from mapping                      |
+| Annotation                                                                     | Description                                   |
+|--------------------------------------------------------------------------------|-----------------------------------------------|
+| `@XmlValue({XmlConverter? converter})`                                         | Maps the content of an XML element to a field |
+| `@XmlElement({String? overrideName, XmlConverter? converter})`                 | Maps an XML element to a field                |
+| `@XmlAttribute({String? overrideName, XmlConverter? converter})`               | Maps an XML attribute to a field              |
+| `@XmlList({String? overrideName, String? childName, XmlConverter? converter})` | Maps repeated elements to a `List` field      |
+| `@XmlIgnore()`                                                                 | Excludes a field from mapping                 |
 
 ## Supported Types
 
