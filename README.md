@@ -86,7 +86,7 @@ This generates `XmlUserMapper`. Use it to parse XML from various sources:
 void main() {
     var user = XmlUserMapper.parse(path: 'data/user.xml');
     user = XmlUserMapper.parse(file: File('data/user.xml'));
-    user = XmlUserMapper.parse(text: xmlText);
+    user = XmlUserMapper.parse(text: "<user>...<user/>");
     user = XmlUserMapper.parse(xmlElement: xmlElement);
 }
 ```
