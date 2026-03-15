@@ -1,5 +1,6 @@
 import "package:xml_object_mapping/xml_object_mapping.dart";
 
+/// A constant annotation instance for mapping XML attributes to fields.
 const xmlAttribute = XmlAttribute();
 
 /// Maps an XML attribute to a field.

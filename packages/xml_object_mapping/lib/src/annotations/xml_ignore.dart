@@ -1,3 +1,4 @@
+/// A constant annotation instance for excluding fields from XML mapping.
 const xmlIgnore = XmlIgnore();
 
 /// Excludes a field from XML mapping.

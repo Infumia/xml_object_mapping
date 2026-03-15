@@ -1,4 +1,4 @@
-/// The constant annotation for marking classes for XML mapping.
+/// A constant annotation instance for marking classes for XML mapping code generation.
 const xml = Xml();
 
 /// Marks a class for XML mapping code generation.
