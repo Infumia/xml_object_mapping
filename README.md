@@ -69,17 +69,26 @@ final user4 = await XmlUserMapper.parse(xmlElement: xmlElement);
 
 ## Annotations
 
-| Annotation                      | Description |
-|---------------------------------|-------------|
-| `@XmlElement({String? overrideName})`   | Maps an XML element to a field |
-| `@XmlAttribute({String? overrideName})` | Maps an XML attribute to a field |
-| `@XmlList({String? overrideName})`      | Maps repeated elements to a `List` field |
-| `@XmlIgnore()`                  | Excludes a field from mapping |
+| Annotation                      | Description                             |
+|---------------------------------|-----------------------------------------|
+| `@XmlElement({String? overrideName, XmlConverter? converter})`   | Maps an XML element to a field          |
+| `@XmlAttribute({String? overrideName, XmlConverter? converter})` | Maps an XML attribute to a field        |
+| `@XmlList({String? overrideName, String? childName, XmlConverter? converter})` | Maps repeated elements to a `List` field |
+| `@XmlIgnore()`                  | Excludes a field from mapping           |
 
 ## Advanced Usage
 
 ### Nested Objects
 
+```xml
+<company>
+  <name>...</name>
+  <address>
+    <street>...</street>
+    <city>...</city>
+  </address>
+</company>
+```
 ```dart
 class Company {
   final String name;
@@ -100,10 +109,18 @@ class Address {
 
 ### Collections
 
+```xml
+<library>
+  <books>
+    <bookName>...</bookName>
+    <bookName>...</bookName>
+  </books>
+</library>
+```
 ```dart
 class Library {
-  @XmlList(overrideName: 'book')
-  final List<Book> books;
+  @XmlList(childName: 'bookName')
+  final List<String> books;
 
   Library({required this.books});
 }
@@ -120,6 +137,8 @@ class Product {
 }
 
 class PriceConverter implements XmlConverter<double> {
+  const PriceConverter();
+
   @override
   double convert(String value) => double.parse(value.replaceAll('\$', ''));
 }
