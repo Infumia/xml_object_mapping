@@ -1,0 +1,18 @@
+name: xml_object_mapping
+description: A Dart library for mapping XML data to Dart objects using annotations.
+version: 1.0.0
+repository: https://github.com/infumia/xml_object_mapping
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  xml: ^6.6.1
+  build: ^2.4.1
+  source_gen: ^1.5.0
+  analyzer: ^6.4.1
+
+dev_dependencies:
+  flint: ^2.14.0
+  build_runner: ^2.4.9
+  source_gen_test: ^1.0.6
