@@ -1,4 +1,3 @@
-import "package:analyzer/dart/constant/value.dart";
 import "package:analyzer/dart/element/element.dart";
 import "package:analyzer/dart/element/type.dart";
 import "package:source_gen/source_gen.dart";
@@ -60,14 +59,15 @@ class XmlAnnotationReader {
 
       allFields.add(field);
 
-      // Check for annotations
       final elementAnnotation = _elementTypeChecker.firstAnnotationOf(field);
       if (elementAnnotation != null) {
         fields.add(_parseXmlElem(field, ConstantReader(elementAnnotation)));
         continue;
       }
 
-      final attributeAnnotation = _attributeTypeChecker.firstAnnotationOf(field);
+      final attributeAnnotation = _attributeTypeChecker.firstAnnotationOf(
+        field,
+      );
       if (attributeAnnotation != null) {
         fields.add(_parseXmlAttr(field, ConstantReader(attributeAnnotation)));
         continue;
@@ -134,10 +134,9 @@ class XmlAnnotationReader {
   static String? _getStringAnnotationParam(
     ConstantReader annotation,
     String paramName,
-  ) =>
-      annotation.read(paramName).isNull
-          ? null
-          : annotation.read(paramName).stringValue;
+  ) => annotation.read(paramName).isNull
+      ? null
+      : annotation.read(paramName).stringValue;
 
   static String? _getConverterInstance(ConstantReader annotation) {
     final converterField = annotation.read("converter");
