@@ -31,6 +31,12 @@ dev_dependencies:
 
 Define your model class with annotations:
 
+```xml
+<user id="123">
+  <name>...</name>
+  <email>...</email>
+</user>
+```
 ```dart
 import "package:xml_object_mapping/xml_object_mapping.dart";
 
