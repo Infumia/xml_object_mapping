@@ -13,3 +13,15 @@ environment:
 
 dev_dependencies:
   flint: ^2.14.0
+  melos: ^7.4.0
+
+melos:
+  scripts:
+    fix:
+      run: dart fix --apply && dart format .
+      exec:
+        concurrency: 2
+    get:
+      run: flutter pub get
+      exec:
+        concurrency: 2

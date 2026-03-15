@@ -1,3 +1,1 @@
-library;
-
-export 'src/xml_object_mapping_base.dart';
+export "src/base.dart";
