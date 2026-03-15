@@ -229,3 +229,70 @@ class PriceConverter implements XmlConverter<double> {
   double convert(String value) => double.parse(value.replaceAll('\$', ''));
 }
 ```
+
+### Map Types
+
+Use `@XmlList` with a map-like structure for key-value pairs:
+
+```xml
+<config>
+    <properties>
+        <entry key="timeout">30</entry>
+        <entry key="retries">3</entry>
+    </properties>
+</config>
+```
+
+```dart
+class Config {
+  @XmlList(childName: 'entry')
+  final List<PropertyEntry> properties;
+
+  Config({required this.properties});
+}
+
+class PropertyEntry {
+  @XmlAttribute()
+  final String key;
+
+  @XmlValue()
+  final int value;
+
+  PropertyEntry({required this.key, required this.value});
+}
+
+void main() {
+    final config = XmlConfigMapper.parse(text: xml);
+    final map = {for (var e in config.properties) e.key: e.value};
+}
+```
+
+### Serialization (Objects → XML)
+
+Convert objects back to XML:
+
+```dart
+void main() {
+    final user = User(id: '123', name: 'John Doe', email: 'john@example.com');
+
+    final xmlElement = XmlUserMapper.toXml(user);
+}
+```
+
+### Error Handling
+
+The mapper throws specific exceptions for common errors:
+
+```dart
+void main() {
+    try {
+        final user = XmlUserMapper.parse(text: xmlString);
+    } on XmlMappingException catch (e) {
+        print('Mapping error: ${e.message}');
+    } on XmlFormatException catch (e) {
+        print('Format error: ${e.message}');
+    } on XmlParserException catch (e) {
+        print('Parse error: ${e.message}');
+    }
+}
+```
