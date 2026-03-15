@@ -53,11 +53,14 @@ class User {
 
   final String? phone;
 
+  final int maxItems;
+
   User({
     required this.id,
     required this.name,
     required this.email,
-    this.phone
+    this.phone,
+    this.maxItems = 10,
   });
 }
 ```
