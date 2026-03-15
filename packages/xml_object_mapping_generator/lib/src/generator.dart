@@ -191,7 +191,7 @@ return $mapperName._build(xmlElement);
       if (field is XmlMapAttributeAnnotation) {
         extractionCode = _buildAttributeExtraction(
           fieldName,
-          fieldType,
+          field.fieldType,
           field.attributeName,
           className,
           isNullable,
@@ -201,7 +201,7 @@ return $mapperName._build(xmlElement);
       } else if (field is XmlMapElementAnnotation) {
         extractionCode = _buildElementExtraction(
           fieldName,
-          fieldType,
+          field.fieldType,
           field.elementName,
           className,
           isNullable,
@@ -211,7 +211,7 @@ return $mapperName._build(xmlElement);
       } else if (field is XmlMapValueAnnotation) {
         extractionCode = _buildValueExtraction(
           fieldName,
-          fieldType,
+          field.fieldType,
           className,
           isNullable,
           field.converterInstance,
@@ -221,7 +221,7 @@ return $mapperName._build(xmlElement);
         extractionCode = _buildListExtraction(
           field,
           fieldName,
-          fieldType,
+          field.fieldType,
           field.elementName,
           field.childName,
           className,
@@ -265,18 +265,19 @@ return $className($fieldNames);
 
   String _buildAttributeExtraction(
     String fieldName,
-    String fieldType,
+    DartType fieldType,
     String attrName,
     String className,
     bool isNullable,
     String? converterInstance,
     bool isNested,
   ) {
+    final fieldTypeName = fieldType.getDisplayString();
     final attrVar = "attr_$fieldName";
     final converter = converterInstance ?? _getDefaultConverter(fieldType);
 
     if (isNested) {
-      final nestedMapper = "Xml${fieldType.replaceAll('?', '')}Mapper";
+      final nestedMapper = "Xml${fieldTypeName.replaceAll('?', '')}Mapper";
       if (isNullable) {
         return '''
 final $attrVar = element.getAttribute("$attrName");
@@ -292,8 +293,8 @@ final $fieldName = $nestedMapper.parse($attrVar);
     }
 
     final castType = isNullable
-        ? (fieldType.endsWith("?") ? fieldType : "$fieldType?")
-        : fieldType;
+        ? (fieldTypeName.endsWith("?") ? fieldTypeName : "$fieldTypeName?")
+        : fieldTypeName;
 
     if (isNullable) {
       return '''
@@ -306,11 +307,11 @@ final $attrVar = element.getAttribute("$attrName");
 if ($attrVar == null) {
   throw XmlMappingMissingElementException("$attrName", "$className");
 }
-$fieldType $fieldName;
+$fieldTypeName $fieldName;
 try {
-  $fieldName = $converter.convert($attrVar) as $fieldType;
+  $fieldName = $converter.convert($attrVar) as $fieldTypeName;
 } catch (e) {
-  throw XmlMappingTypeConversionException($attrVar, "$fieldType", reason: e.toString());
+  throw XmlMappingTypeConversionException($attrVar, "$fieldTypeName", reason: e.toString());
 }
 ''';
     }
@@ -318,17 +319,18 @@ try {
 
   String _buildElementExtraction(
     String fieldName,
-    String fieldType,
+    DartType fieldType,
     String elemName,
     String className,
     bool isNullable,
     String? converterInstance,
     bool isNested,
   ) {
+    final fieldTypeName = fieldType.getDisplayString();
     final elemVar = "elem_$fieldName";
 
     if (isNested) {
-      final nestedMapper = "Xml${fieldType.replaceAll('?', '')}Mapper";
+      final nestedMapper = "Xml${fieldTypeName.replaceAll('?', '')}Mapper";
       if (isNullable) {
         return '''
 final $elemVar = element.getElement("$elemName");
@@ -345,8 +347,8 @@ final $fieldName = $nestedMapper.parseElement($elemVar);
 
     final converter = converterInstance ?? _getDefaultConverter(fieldType);
     final castType = isNullable
-        ? (fieldType.endsWith("?") ? fieldType : "$fieldType?")
-        : fieldType;
+        ? (fieldTypeName.endsWith("?") ? fieldTypeName : "$fieldTypeName?")
+        : fieldTypeName;
 
     if (isNullable) {
       return '''
@@ -359,11 +361,11 @@ final $elemVar = element.getElement("$elemName");
 if ($elemVar == null) {
   throw XmlMappingMissingElementException("$elemName", "$className");
 }
-$fieldType $fieldName;
+$fieldTypeName $fieldName;
 try {
-  $fieldName = $converter.convert($elemVar.text) as $fieldType;
+  $fieldName = $converter.convert($elemVar.text) as $fieldTypeName;
 } catch (e) {
-  throw XmlMappingTypeConversionException($elemVar.text, "$fieldType", reason: e.toString());
+  throw XmlMappingTypeConversionException($elemVar.text, "$fieldTypeName", reason: e.toString());
 }
 ''';
     }
@@ -371,31 +373,32 @@ try {
 
   String _buildValueExtraction(
     String fieldName,
-    String fieldType,
+    DartType fieldType,
     String className,
     bool isNullable,
     String? converterInstance,
     bool isNested,
   ) {
+    final fieldTypeName = fieldType.getDisplayString();
     if (isNested) {
-      final nestedMapper = "Xml${fieldType.replaceAll('?', '')}Mapper";
+      final nestedMapper = "Xml${fieldTypeName.replaceAll('?', '')}Mapper";
       return "final $fieldName = $nestedMapper.parseElement(element);";
     }
 
     final converter = converterInstance ?? _getDefaultConverter(fieldType);
     final castType = isNullable
-        ? (fieldType.endsWith("?") ? fieldType : "$fieldType?")
-        : fieldType;
+        ? (fieldTypeName.endsWith("?") ? fieldTypeName : "$fieldTypeName?")
+        : fieldTypeName;
 
     if (isNullable) {
       return "final $fieldName = element.text.isNotEmpty ? ($converter.convert(element.text) as $castType) : null;";
     } else {
       return '''
-$fieldType $fieldName;
+$fieldTypeName $fieldName;
 try {
-  $fieldName = $converter.convert(element.text) as $fieldType;
+  $fieldName = $converter.convert(element.text) as $fieldTypeName;
 } catch (e) {
-  throw XmlMappingTypeConversionException(element.text, "$fieldType", reason: e.toString());
+  throw XmlMappingTypeConversionException(element.text, "$fieldTypeName", reason: e.toString());
 }
 ''';
     }
@@ -404,7 +407,7 @@ try {
   String _buildListExtraction(
     XmlMapListAnnotation field,
     String fieldName,
-    String fieldType,
+    DartType fieldType,
     String listElemName,
     String childName,
     String className,
@@ -429,7 +432,7 @@ final $fieldName = element.getElement("$listElemName")?.childElements
     .toList() ?? [];
 ''';
     } else {
-      final converter = converterInstance ?? _getDefaultConverter(itemTypeName);
+      final converter = converterInstance ?? _getDefaultConverter(itemType);
       return '''
 final $fieldName = element.getElement("$listElemName")?.childElements
     .where((e) => e.name.local == "$childName")
@@ -447,8 +450,12 @@ final $fieldName = element.getElement("$listElemName")?.childElements
     return XmlAnnotationReader.hasXmlAnnotation(element);
   }
 
-  String _getDefaultConverter(String typeName) {
+  String _getDefaultConverter(DartType type) {
+    final typeName = type.getDisplayString();
     final cleanType = typeName.replaceAll("?", "");
+    if (XmlAnnotationReader.isEnumType(type)) {
+      return "const EnumConverter($cleanType.values)";
+    }
     return switch (cleanType) {
       "int" => "const IntConverter()",
       "double" => "const DoubleConverter()",

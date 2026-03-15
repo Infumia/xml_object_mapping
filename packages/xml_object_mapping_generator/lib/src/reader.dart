@@ -146,6 +146,12 @@ class XmlAnnotationReader {
     return null;
   }
 
+  /// Checks if a type is an Enum.
+  static bool isEnumType(DartType type) {
+    final element = type.element;
+    return element is EnumElement;
+  }
+
   /// Checks if a type is a built-in supported type.
   static bool isBuiltInType(DartType type) {
     final typeName = type.getDisplayString();
