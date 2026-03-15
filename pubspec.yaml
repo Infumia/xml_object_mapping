@@ -21,7 +21,3 @@ melos:
       run: dart fix --apply && dart format .
       exec:
         concurrency: 2
-    get:
-      run: flutter pub get
-      exec:
-        concurrency: 2
