@@ -51,7 +51,14 @@ class User {
 
   final String email;
 
-  User({required this.id, required this.name, required this.email});
+  final String? phone;
+
+  User({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.phone
+  });
 }
 ```
 
