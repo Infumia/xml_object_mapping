@@ -46,6 +46,7 @@ import "package:xml_object_mapping/xml_object_mapping.dart";
 
 part "user.g.dart";
 
+@xml
 class User {
   @XmlAttribute()
   final int id;
@@ -131,6 +132,7 @@ For other types, use custom converters (see below).
 ```
 
 ```dart
+@xml
 class Company {
   final String name;
 
@@ -139,6 +141,7 @@ class Company {
   Company({required this.name, required this.address});
 }
 
+@xml
 class Address {
   final String street;
 
@@ -160,6 +163,7 @@ class Address {
 ```
 
 ```dart
+@xml
 class Library {
   @XmlList(childName: 'bookName')
   final List<String> books;
@@ -188,6 +192,7 @@ class Library {
 ```
 
 ```dart
+@xml
 class Bookstore {
   @XmlList(childName: 'book')
   final List<Book> books;
@@ -195,6 +200,7 @@ class Bookstore {
   Bookstore({required this.books});
 }
 
+@xml
 class Book {
   final String title;
 
@@ -215,6 +221,7 @@ class Book {
 ```
 
 ```dart
+@xml
 class Product {
   @XmlElement(converter: PriceConverter())
   final double price;
@@ -244,6 +251,7 @@ Use `@XmlList` with a map-like structure for key-value pairs:
 ```
 
 ```dart
+@xml
 class Config {
   @XmlList(childName: 'entry')
   final List<PropertyEntry> properties;
@@ -251,6 +259,7 @@ class Config {
   Config({required this.properties});
 }
 
+@xml
 class PropertyEntry {
   @XmlAttribute()
   final String key;
