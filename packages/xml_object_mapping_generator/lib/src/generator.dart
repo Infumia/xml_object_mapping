@@ -240,7 +240,13 @@ return $mapperName._build(xmlElement);
       assignments.add(extractionCode);
     }
 
+    final mappedFieldNames = model.fields
+        .where((f) => f is! XmlMapIgnoreAnnotation)
+        .map((f) => f.fieldName)
+        .toSet();
+
     final fieldNames = model.allFields
+        .where((f) => mappedFieldNames.contains(f.name))
         .map((f) => "${f.name}: ${f.name}")
         .join(", ");
 

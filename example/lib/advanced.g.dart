@@ -84,7 +84,8 @@ final class XmlProjectMapper {
     ProjectStatus status;
     try {
       status =
-          const XmlValueConverter().convert(elem_status.text) as ProjectStatus;
+          const ProjectStatusConverter().convert(elem_status.text)
+              as ProjectStatus;
     } catch (e) {
       throw XmlMappingTypeConversionException(
         elem_status.text,

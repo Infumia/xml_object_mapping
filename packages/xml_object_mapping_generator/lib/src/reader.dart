@@ -60,32 +60,33 @@ class XmlAnnotationReader {
 
       allFields.add(field);
 
-      final element = _elementTypeChecker.firstAnnotationOf(field);
-      if (element != null) {
-        fields.add(_parseXmlElem(field, element));
+      // Check for annotations
+      final elementAnnotation = _elementTypeChecker.firstAnnotationOf(field);
+      if (elementAnnotation != null) {
+        fields.add(_parseXmlElem(field, ConstantReader(elementAnnotation)));
         continue;
       }
 
-      final attribute = _attributeTypeChecker.firstAnnotationOf(field);
-      if (attribute != null) {
-        fields.add(_parseXmlAttr(field, attribute));
+      final attributeAnnotation = _attributeTypeChecker.firstAnnotationOf(field);
+      if (attributeAnnotation != null) {
+        fields.add(_parseXmlAttr(field, ConstantReader(attributeAnnotation)));
         continue;
       }
 
-      final value = _valueTypeChecker.firstAnnotationOf(field);
-      if (value != null) {
-        fields.add(_parseXmlValue(field, value));
+      final valueAnnotation = _valueTypeChecker.firstAnnotationOf(field);
+      if (valueAnnotation != null) {
+        fields.add(_parseXmlValue(field, ConstantReader(valueAnnotation)));
         continue;
       }
 
-      final list = _listTypeChecker.firstAnnotationOf(field);
-      if (list != null) {
-        fields.add(_parseXmlList(field, list));
+      final listAnnotation = _listTypeChecker.firstAnnotationOf(field);
+      if (listAnnotation != null) {
+        fields.add(_parseXmlList(field, ConstantReader(listAnnotation)));
         continue;
       }
 
-      final ignore = _ignoreTypeChecker.firstAnnotationOf(field);
-      if (ignore != null) {
+      final ignoreAnnotation = _ignoreTypeChecker.firstAnnotationOf(field);
+      if (ignoreAnnotation != null) {
         fields.add(XmlMapIgnoreAnnotation(field, null));
         continue;
       }
@@ -96,7 +97,7 @@ class XmlAnnotationReader {
 
   static XmlMapElementAnnotation _parseXmlElem(
     FieldElement field,
-    DartObject annotation,
+    ConstantReader annotation,
   ) {
     final overrideName = _getStringAnnotationParam(annotation, "overrideName");
     final converter = _getConverterInstance(annotation);
@@ -105,7 +106,7 @@ class XmlAnnotationReader {
 
   static XmlMapAttributeAnnotation _parseXmlAttr(
     FieldElement field,
-    DartObject annotation,
+    ConstantReader annotation,
   ) {
     final overrideName = _getStringAnnotationParam(annotation, "overrideName");
     final converter = _getConverterInstance(annotation);
@@ -114,7 +115,7 @@ class XmlAnnotationReader {
 
   static XmlMapValueAnnotation _parseXmlValue(
     FieldElement field,
-    DartObject annotation,
+    ConstantReader annotation,
   ) {
     final converter = _getConverterInstance(annotation);
     return XmlMapValueAnnotation(field, converter);
@@ -122,7 +123,7 @@ class XmlAnnotationReader {
 
   static XmlMapListAnnotation _parseXmlList(
     FieldElement field,
-    DartObject annotation,
+    ConstantReader annotation,
   ) {
     final childName = _getStringAnnotationParam(annotation, "childName")!;
     final overrideName = _getStringAnnotationParam(annotation, "overrideName");
@@ -131,16 +132,29 @@ class XmlAnnotationReader {
   }
 
   static String? _getStringAnnotationParam(
-    DartObject annotation,
+    ConstantReader annotation,
     String paramName,
-  ) => annotation.getField(paramName)?.toStringValue();
+  ) =>
+      annotation.read(paramName).isNull
+          ? null
+          : annotation.read(paramName).stringValue;
 
-  static String? _getConverterInstance(DartObject annotation) {
-    final converterField = annotation.getField("converter");
-    if (converterField == null || converterField.isNull) {
+  static String? _getConverterInstance(ConstantReader annotation) {
+    final converterField = annotation.read("converter");
+    if (converterField.isNull) {
       return null;
     }
-    return converterField.toStringValue();
+
+    if (converterField.isString) {
+      return converterField.stringValue;
+    }
+
+    final type = converterField.objectValue.type;
+    if (type != null) {
+      return "const ${type.getDisplayString()}()";
+    }
+
+    return null;
   }
 
   /// Checks if a type is a built-in supported type.
