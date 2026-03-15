@@ -1,6 +1,7 @@
 name: xml_object_mapping_example
 description: Example of using xml_object_mapping.
 publish_to: none
+resolution: workspace
 
 environment:
   sdk: ^3.11.1

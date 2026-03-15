@@ -5,7 +5,7 @@ void main() {
   // Existing example
   runBasicExample();
 
-  print("\n" + "=" * 50 + "\n");
+  print("\n${"=" * 50}\n");
 
   // Advanced example
   runAdvancedExample();

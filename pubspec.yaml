@@ -7,6 +7,7 @@ publish_to: none
 workspace:
   - packages/xml_object_mapping
   - packages/xml_object_mapping_generator
+  - example/
 
 environment:
   sdk: ^3.11.1
