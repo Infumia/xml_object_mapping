@@ -33,7 +33,7 @@ Define your model class with annotations:
 
 ```xml
 <user id="123">
-  <name>...</name>
+  <nameSurname>...</nameSurname>
   <email>...</email>
 </user>
 ```
@@ -44,8 +44,9 @@ part "user.g.dart";
 
 class User {
   @XmlAttribute()
-  final String id;
+  final int id;
 
+  @XmlElement(overrideName: "nameSurname")
   final String name;
 
   final String email;
