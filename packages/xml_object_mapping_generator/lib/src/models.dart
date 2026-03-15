@@ -76,10 +76,6 @@ class XmlMapListAnnotation extends XmlFieldAnnotation {
   String get elementName => overrideName ?? fieldName;
 }
 
-/// Represents a field annotated with `@XmlMapIgnore`.
-class XmlMapIgnoreAnnotation extends XmlFieldAnnotation {
-  XmlMapIgnoreAnnotation(super.field, super.converterInstance);
-}
 
 /// Represents a parsed class for code generation.
 class XmlClassModel {

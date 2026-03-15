@@ -37,11 +37,6 @@ class XmlAnnotationReader {
     inPackage: "xml_object_mapping",
   );
 
-  /// The type checker for `@XmlMapIgnore` annotation.
-  static const _ignoreTypeChecker = TypeChecker.typeNamed(
-    XmlMapIgnore,
-    inPackage: "xml_object_mapping",
-  );
 
   /// Checks if a class is annotated with `@xml`.
   static bool hasXmlAnnotation(ClassElement element) =>
@@ -85,11 +80,6 @@ class XmlAnnotationReader {
         continue;
       }
 
-      final ignoreAnnotation = _ignoreTypeChecker.firstAnnotationOf(field);
-      if (ignoreAnnotation != null) {
-        fields.add(XmlMapIgnoreAnnotation(field, null));
-        continue;
-      }
     }
 
     return XmlClassModel(element, fields, allFields);

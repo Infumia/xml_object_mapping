@@ -180,9 +180,6 @@ return $mapperName._build(xmlElement);
     final assignments = <String>[];
 
     for (final field in model.fields) {
-      if (field is XmlMapIgnoreAnnotation) {
-        continue;
-      }
 
       final fieldName = field.fieldName;
       final fieldType = field.fieldType.getDisplayString();
@@ -239,7 +236,6 @@ return $mapperName._build(xmlElement);
     }
 
     final mappedFieldNames = model.fields
-        .where((f) => f is! XmlMapIgnoreAnnotation)
         .map((f) => f.fieldName)
         .toSet();
 

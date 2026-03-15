@@ -105,7 +105,6 @@ void main() {
 | `@XmlMapElement({String? overrideName, XmlConverter? converter})`                 | Maps an XML element to a field                |
 | `@XmlMapAttribute({String? overrideName, XmlConverter? converter})`               | Maps an XML attribute to a field              |
 | `@XmlMapList({String? overrideName, String? childName, XmlConverter? converter})` | Maps repeated elements to a `List` field      |
-| `@XmlMapIgnore()`                                                                 | Excludes a field from mapping                 |
 
 ## Supported Types
 
