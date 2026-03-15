@@ -69,12 +69,12 @@ final user4 = await XmlUserMapper.parse(xmlElement: xmlElement);
 
 ## Annotations
 
-| Annotation                      | Description                             |
-|---------------------------------|-----------------------------------------|
-| `@XmlElement({String? overrideName, XmlConverter? converter})`   | Maps an XML element to a field          |
-| `@XmlAttribute({String? overrideName, XmlConverter? converter})` | Maps an XML attribute to a field        |
+| Annotation                                                                     | Description                              |
+|--------------------------------------------------------------------------------|------------------------------------------|
+| `@XmlElement({String? overrideName, XmlConverter? converter})`                 | Maps an XML element to a field           |
+| `@XmlAttribute({String? overrideName, XmlConverter? converter})`               | Maps an XML attribute to a field         |
 | `@XmlList({String? overrideName, String? childName, XmlConverter? converter})` | Maps repeated elements to a `List` field |
-| `@XmlIgnore()`                  | Excludes a field from mapping           |
+| `@XmlIgnore()`                                                                 | Excludes a field from mapping            |
 
 ## Advanced Usage
 
