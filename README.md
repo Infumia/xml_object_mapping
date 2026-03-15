@@ -84,17 +84,10 @@ This generates `XmlUserMapper`. Use it to parse XML from various sources:
 
 ```dart
 void main() {
-    // Parse from file path
-    final user1 = XmlUserMapper.parse(path: 'data/user.xml');
-
-    // Parse from File object
-    final user2 = XmlUserMapper.parse(file: File('data/user.xml'));
-
-    // Parse from XML string
-    final user3 = XmlUserMapper.parse(text: xmlText);
-    
-    // Parse from XElement
-    final user4 = XmlUserMapper.parse(xmlElement: xmlElement);
+    final user1 = XmlUserMapper.parse<User>(path: 'data/user.xml');
+    final user2 = XmlUserMapper.parse<User>(file: File('data/user.xml'));
+    final user3 = XmlUserMapper.parse<User>(text: xmlText);
+    final user4 = XmlUserMapper.parse<User>(xmlElement: xmlElement);
 }
 ```
 
