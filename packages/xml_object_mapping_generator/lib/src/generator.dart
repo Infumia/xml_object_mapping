@@ -97,7 +97,7 @@ final document = XmlDocument.parse(text);
 final element = document.rootElement;
 if (rootName != null && element.name.local != rootName) {
   throw XmlFormatException(
-    'Expected root element "$rootName" but found "${element.name.local}"',
+    'Expected root element "\$rootName" but found "\${element.name.local}"',
   );
 }
 return $mapperName._build(element);
@@ -185,7 +185,7 @@ return $mapperName.parse(file: File(path), rootName: rootName);
           ..body = Code('''
 if (rootName != null && xmlElement.name.local != rootName) {
   throw XmlFormatException(
-    'Expected root element "$rootName" but found "${xmlElement.name.local}"',
+    'Expected root element "\$rootName" but found "\${xmlElement.name.local}"',
   );
 }
 return $mapperName._build(xmlElement);
@@ -201,9 +201,7 @@ return $mapperName._build(xmlElement);
       }
 
       final fieldName = field.fieldName;
-      final fieldType = field.fieldType.getDisplayString(
-        withNullability: false,
-      );
+      final fieldType = field.fieldType.getDisplayString();
       final isNullable = field.isNullable;
 
       String extractionCode;
@@ -309,7 +307,7 @@ try {
     }
   }
 
-  String _buildElementRetraction(
+  String _buildElementExtraction(
     String fieldName,
     String fieldType,
     String elemName,
@@ -382,11 +380,11 @@ try {
     }
 
     final itemType = listType.typeArguments.first;
-    final itemTypeName = itemType.getDisplayString(withNullability: false);
+    final itemTypeName = itemType.getDisplayString();
     final isNestedXmlClass = _isXmlAnnotatedClass(itemType);
 
     if (isNestedXmlClass) {
-      final itemMapperName = "Xml${itemType.element.name}Mapper";
+      final itemMapperName = "Xml${itemType.element!.name}Mapper";
       return '''
 final $fieldName = element.getElement("$listElemName")?.elements
     .where((e) => e.name.local == "$childName")

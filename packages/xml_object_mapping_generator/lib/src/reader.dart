@@ -1,3 +1,4 @@
+import "package:analyzer/dart/constant/value.dart";
 import "package:analyzer/dart/element/element.dart";
 import "package:analyzer/dart/element/type.dart";
 import "package:source_gen/source_gen.dart";
@@ -99,7 +100,7 @@ class XmlAnnotationReader {
 
   static XmlElementAnnotation _parseXmlElement(
     FieldElement field,
-    ElementAnnotation annotation,
+    DartObject annotation,
   ) {
     final overrideName = _getStringAnnotationParam(annotation, "overrideName");
     final converter = _getConverterInstance(annotation);
@@ -108,7 +109,7 @@ class XmlAnnotationReader {
 
   static XmlAttributeAnnotation _parseXmlAttribute(
     FieldElement field,
-    ElementAnnotation annotation,
+    DartObject annotation,
   ) {
     final overrideName = _getStringAnnotationParam(annotation, "overrideName");
     final converter = _getConverterInstance(annotation);
@@ -117,7 +118,7 @@ class XmlAnnotationReader {
 
   static XmlValueAnnotation _parseXmlValue(
     FieldElement field,
-    ElementAnnotation annotation,
+    DartObject annotation,
   ) {
     final converter = _getConverterInstance(annotation);
     return XmlValueAnnotation(field, converter);
@@ -125,7 +126,7 @@ class XmlAnnotationReader {
 
   static XmlListAnnotation _parseXmlList(
     FieldElement field,
-    ElementAnnotation annotation,
+    DartObject annotation,
   ) {
     final childName = _getStringAnnotationParam(annotation, "childName")!;
     final overrideName = _getStringAnnotationParam(annotation, "overrideName");
@@ -134,22 +135,13 @@ class XmlAnnotationReader {
   }
 
   static String? _getStringAnnotationParam(
-    ElementAnnotation annotation,
+    DartObject annotation,
     String paramName,
-  ) {
-    final constant = annotation.computeConstantValue();
-    if (constant == null) {
-      return null;
-    }
-    return constant.getField(paramName)?.toStringValue();
-  }
+  ) =>
+      annotation.getField(paramName)?.toStringValue();
 
-  static String? _getConverterInstance(ElementAnnotation annotation) {
-    final constant = annotation.computeConstantValue();
-    if (constant == null) {
-      return null;
-    }
-    final converterField = constant.getField("converter");
+  static String? _getConverterInstance(DartObject annotation) {
+    final converterField = annotation.getField("converter");
     if (converterField == null || converterField.isNull) {
       return null;
     }
@@ -159,7 +151,7 @@ class XmlAnnotationReader {
 
   /// Checks if a type is a built-in supported type.
   static bool isBuiltInType(DartType type) {
-    final typeName = type.getDisplayString(withNullability: false);
+    final typeName = type.getDisplayString();
     return switch (typeName) {
       "String" || "int" || "double" || "num" || "bool" || "DateTime" => true,
       _ => false,
