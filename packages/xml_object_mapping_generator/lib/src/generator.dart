@@ -37,7 +37,6 @@ class XmlMapperGenerator extends GeneratorForAnnotation<XmlMap> {
       ..name = mapperName
       ..modifier = ClassModifier.final$;
 
-    // Add parse methods
     mapperClass.methods.addAll([
       _buildParseFromTextMethod(mapperName, className),
       _buildParseFromFileMethod(mapperName, className),
@@ -46,7 +45,6 @@ class XmlMapperGenerator extends GeneratorForAnnotation<XmlMap> {
       _buildToXmlMethod(model, className),
     ]);
 
-    // Add helper methods
     mapperClass.methods.addAll([
       _buildBuildMethod(model, className),
       _buildExtractMethod(model),
