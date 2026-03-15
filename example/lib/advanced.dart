@@ -34,7 +34,6 @@ class Project {
   @XmlMapList(childName: "task", overrideName: "tasks")
   final List<Task> tasks;
 
-  @xmlMapIgnore
   final String internalId;
 
   Project({
