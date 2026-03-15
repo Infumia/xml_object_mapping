@@ -1,6 +1,7 @@
 /// Annotations for XML object mapping.
 library annotations;
 
+export "xml.dart";
 export "xml_value.dart";
 export "xml_element.dart";
 export "xml_attribute.dart";
