@@ -2,7 +2,8 @@
 
 [![Pub Version](https://img.shields.io/pub/v/xml_object_mapping)](https://pub.dev/packages/xml_object_mapping)
 
-A Dart library for mapping XML data to Dart objects using annotations. Inspired by JSON serialization patterns, this package eliminates boilerplate XML parsing code.
+A Dart library for mapping XML data to Dart objects using annotations. Inspired by JSON serialization patterns, 
+this package eliminates boilerplate XML parsing code.
 
 ## Features
 
@@ -33,10 +34,12 @@ Define your model class with annotations:
 
 ```xml
 <user id="123">
-  <nameSurname>...</nameSurname>
-  <email>...</email>
+    <nameSurname>...</nameSurname>
+    <email>...</email>
+    <maxItems>9</maxItems>
 </user>
 ```
+
 ```dart
 import "package:xml_object_mapping/xml_object_mapping.dart";
 
@@ -74,17 +77,19 @@ dart run build_runner build
 This generates `XmlUserMapper`. Use it to parse XML from various sources:
 
 ```dart
+void main() async {
 // Parse from file path
-final user1 = await XmlUserMapper.parse(path: 'data/user.xml');
+  final user1 = await XmlUserMapper.parse(path: 'data/user.xml');
 
 // Parse from File object
-final user2 = await XmlUserMapper.parse(file: File('data/user.xml'));
+  final user2 = await XmlUserMapper.parse(file: File('data/user.xml'));
 
 // Parse from XML string
-final user3 = await XmlUserMapper.parse(text: xmlText);
+  final user3 = await XmlUserMapper.parse(text: xmlText);
 
 // Parse from XElement
-final user4 = await XmlUserMapper.parse(xmlElement: xmlElement);
+  final user4 = await XmlUserMapper.parse(xmlElement: xmlElement);
+}
 ```
 
 ## Annotations
@@ -117,13 +122,14 @@ For other types, use custom converters (see below).
 
 ```xml
 <company>
-  <name>...</name>
-  <address>
-    <street>...</street>
-    <city>...</city>
-  </address>
+    <name>...</name>
+    <address>
+        <street>...</street>
+        <city>...</city>
+    </address>
 </company>
 ```
+
 ```dart
 class Company {
   final String name;
@@ -146,12 +152,13 @@ class Address {
 
 ```xml
 <library>
-  <books>
-    <bookName>...</bookName>
-    <bookName>...</bookName>
-  </books>
+    <books>
+        <bookName>...</bookName>
+        <bookName>...</bookName>
+    </books>
 </library>
 ```
+
 ```dart
 class Library {
   @XmlList(childName: 'bookName')
@@ -165,20 +172,21 @@ class Library {
 
 ```xml
 <bookstore>
-  <books>
-    <book>
-      <title>...</title>
-      <author>...</author>
-      <price>...</price>
-    </book>
-    <book>
-      <title>...</title>
-      <author>...</author>
-      <price>...</price>
-    </book>
-  </books>
+    <books>
+        <book>
+            <title>...</title>
+            <author>...</author>
+            <price>...</price>
+        </book>
+        <book>
+            <title>...</title>
+            <author>...</author>
+            <price>...</price>
+        </book>
+    </books>
 </bookstore>
 ```
+
 ```dart
 class Bookstore {
   @XmlList(childName: 'book')
@@ -202,9 +210,10 @@ class Book {
 
 ```xml
 <product>
-  <price>$19.99</price>
+    <price>$19.99</price>
 </product>
 ```
+
 ```dart
 class Product {
   @XmlElement(converter: PriceConverter())
