@@ -1,0 +1,9 @@
+builders:
+  xml_object_mapping_generator:
+    import: "package:xml_object_mapping_generator/xml_object_mapping_generator.dart"
+    builder_factories:
+      - "xmlMapperBuilder"
+    build_extensions:
+      { ".dart": [ ".xml_mapper.g.dart" ] }
+    auto_apply: dependents
+    build_to: source
