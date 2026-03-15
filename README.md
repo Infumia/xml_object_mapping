@@ -22,6 +22,9 @@ Add to your `pubspec.yaml`:
 dependencies:
   xml: ^6.0.0
   xml_object_mapping: ^1.0.0
+
+dev_dependencies:
+  xml_object_mapping_generator: ^1.0.0
 ```
 
 ### Basic Usage
