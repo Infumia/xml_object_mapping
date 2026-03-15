@@ -144,6 +144,43 @@ class Library {
 }
 ```
 
+### Collections of Nested Objects
+
+```xml
+<bookstore>
+  <books>
+    <book>
+      <title>...</title>
+      <author>...</author>
+      <price>...</price>
+    </book>
+    <book>
+      <title>...</title>
+      <author>...</author>
+      <price>...</price>
+    </book>
+  </books>
+</bookstore>
+```
+```dart
+class Bookstore {
+  @XmlList(childName: 'book')
+  final List<Book> books;
+
+  Bookstore({required this.books});
+}
+
+class Book {
+  final String title;
+
+  final String author;
+
+  final double price;
+
+  Book({required this.title, required this.author, required this.price});
+}
+```
+
 ### Custom Converters
 
 ```dart
