@@ -33,7 +33,6 @@ import "package:xml_object_mapping/xml_object_mapping.dart";
 
 part "user.g.dart";
 
-@XmlElement(name: "user")
 class User {
   @XmlAttribute()
   final String id;
@@ -82,7 +81,6 @@ final user4 = await XmlUserMapper.parse(xmlElement: xmlElement);
 ### Nested Objects
 
 ```dart
-@XmlElement(name: 'company')
 class Company {
   final String name;
 
@@ -91,7 +89,6 @@ class Company {
   Company({required this.name, required this.address});
 }
 
-@XmlElement(name: 'address')
 class Address {
   final String street;
 
@@ -104,7 +101,6 @@ class Address {
 ### Collections
 
 ```dart
-@XmlElement(name: 'library')
 class Library {
   @XmlList(name: 'book')
   final List<Book> books;
@@ -116,7 +112,6 @@ class Library {
 ### Custom Converters
 
 ```dart
-@XmlElement(name: 'product')
 class Product {
   @XmlElement(converter: PriceConverter())
   final double price;
