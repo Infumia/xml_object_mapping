@@ -83,18 +83,18 @@ dart run build_runner build
 This generates `XmlUserMapper`. Use it to parse XML from various sources:
 
 ```dart
-void main() async {
+void main() {
     // Parse from file path
-    final user1 = await XmlUserMapper.parse(path: 'data/user.xml');
+    final user1 = XmlUserMapper.parse(path: 'data/user.xml');
 
     // Parse from File object
-    final user2 = await XmlUserMapper.parse(file: File('data/user.xml'));
+    final user2 = XmlUserMapper.parse(file: File('data/user.xml'));
 
     // Parse from XML string
-    final user3 = await XmlUserMapper.parse(text: xmlText);
+    final user3 = XmlUserMapper.parse(text: xmlText);
     
     // Parse from XElement
-    final user4 = await XmlUserMapper.parse(xmlElement: xmlElement);
+    final user4 = XmlUserMapper.parse(xmlElement: xmlElement);
 }
 ```
 
