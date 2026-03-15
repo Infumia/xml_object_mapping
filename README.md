@@ -57,7 +57,7 @@ class User {
     required this.id,
     required this.name,
     required this.email,
-    required this.phone
+    this.phone
   });
 }
 ```
