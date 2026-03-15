@@ -1,15 +1,8 @@
-name: xml_object_mapping_workspacae
+name: xml_object_mapping
 description: A Dart library for mapping XML data to Dart objects using annotations.
 version: 1.0.0
 repository: https://github.com/infumia/xml_object_mapping
-publish_to: none
-
-workspace:
-  - packages/xml_object_mapping
-  - packages/xml_object_mapping_generator
+resolution: workspace
 
 environment:
   sdk: ^3.11.1
-
-dev_dependencies:
-  flint: ^2.14.0
