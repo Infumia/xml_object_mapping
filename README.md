@@ -85,14 +85,14 @@ Run the build runner to generate the mapper:
 dart run build_runner build
 ```
 
-This generates `XmlUserMapper`. Use it to parse XML from various sources:
+This generates `UserXmlMapper`. Use it to parse XML from various sources:
 
 ```dart
 void main() {
-    var user = XmlUserMapper.parse(path: 'data/user.xml');
-    user = XmlUserMapper.parse(file: File('data/user.xml'));
-    user = XmlUserMapper.parse(text: "<user>...<user/>");
-    user = XmlUserMapper.parse(xmlElement: xmlElement);
+    var user = UserXmlMapper.parse(path: 'data/user.xml');
+    user = UserXmlMapper.parse(file: File('data/user.xml'));
+    user = UserXmlMapper.parse(text: "<user>...<user/>");
+    user = UserXmlMapper.parse(xmlElement: xmlElement);
 }
 ```
 
@@ -295,7 +295,7 @@ Convert objects back to XML:
 void main() {
     final user = User(id: '123', name: 'John Doe', email: 'john@example.com');
 
-    final xmlElement = XmlUserMapper.toXml(user);
+    final xmlElement = UserXmlMapper.toXml(user);
 }
 ```
 
@@ -306,7 +306,7 @@ The mapper throws specific exceptions for common errors:
 ```dart
 void main() {
     try {
-        final user = XmlUserMapper.parse(text: xmlString);
+        final user = UserXmlMapper.parse(text: xmlString);
     } on XmlMappingException catch (e) {
         print('Mapping error: ${e.message}');
     } on XmlFormatException catch (e) {

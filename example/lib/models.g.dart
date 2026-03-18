@@ -6,7 +6,7 @@ part of 'models.dart';
 // XmlMapperGenerator
 // **************************************************************************
 
-final class XmlUserMapper {
+final class UserXmlMapper {
   static User parse(String text, {String? rootName}) {
     final document = XmlDocument.parse(text);
     final element = document.rootElement;
@@ -16,20 +16,20 @@ final class XmlUserMapper {
       );
     }
 
-    return XmlUserMapper._build(element);
+    return UserXmlMapper._build(element);
   }
 
   static User parseFile(File file, {String? rootName}) {
     try {
       final text = file.readAsStringSync();
-      return XmlUserMapper.parse(text, rootName: rootName);
+      return UserXmlMapper.parse(text, rootName: rootName);
     } on FileSystemException catch (e) {
       throw XmlMappingParserException('Failed to read file: ${e.message}');
     }
   }
 
   static User parsePath(String path, {String? rootName}) {
-    return XmlUserMapper.parseFile(File(path), rootName: rootName);
+    return UserXmlMapper.parseFile(File(path), rootName: rootName);
   }
 
   static User parseElement(XmlElement xmlElement, {String? rootName}) {
@@ -38,7 +38,7 @@ final class XmlUserMapper {
         'Expected root element "$rootName" but found "${xmlElement.name.local}"',
       );
     }
-    return XmlUserMapper._build(xmlElement);
+    return UserXmlMapper._build(xmlElement);
   }
 
   static XmlElement toXml(User instance) {
@@ -103,7 +103,7 @@ final class XmlUserMapper {
 
     final elem_profile = element.getElement("profile");
     final profile = elem_profile != null
-        ? XmlProfileMapper.parseElement(elem_profile)
+        ? ProfileXmlMapper.parseElement(elem_profile)
         : null;
 
     return User(
@@ -120,7 +120,7 @@ final class XmlUserMapper {
   }
 }
 
-final class XmlProfileMapper {
+final class ProfileXmlMapper {
   static Profile parse(String text, {String? rootName}) {
     final document = XmlDocument.parse(text);
     final element = document.rootElement;
@@ -130,20 +130,20 @@ final class XmlProfileMapper {
       );
     }
 
-    return XmlProfileMapper._build(element);
+    return ProfileXmlMapper._build(element);
   }
 
   static Profile parseFile(File file, {String? rootName}) {
     try {
       final text = file.readAsStringSync();
-      return XmlProfileMapper.parse(text, rootName: rootName);
+      return ProfileXmlMapper.parse(text, rootName: rootName);
     } on FileSystemException catch (e) {
       throw XmlMappingParserException('Failed to read file: ${e.message}');
     }
   }
 
   static Profile parsePath(String path, {String? rootName}) {
-    return XmlProfileMapper.parseFile(File(path), rootName: rootName);
+    return ProfileXmlMapper.parseFile(File(path), rootName: rootName);
   }
 
   static Profile parseElement(XmlElement xmlElement, {String? rootName}) {
@@ -152,7 +152,7 @@ final class XmlProfileMapper {
         'Expected root element "$rootName" but found "${xmlElement.name.local}"',
       );
     }
-    return XmlProfileMapper._build(xmlElement);
+    return ProfileXmlMapper._build(xmlElement);
   }
 
   static XmlElement toXml(Profile instance) {

@@ -30,7 +30,7 @@ class XmlMapperGenerator extends GeneratorForAnnotation<XmlMap> {
   }
 
   Class _buildMapperClass(XmlClassModel model) {
-    final mapperName = "Xml${model.className}Mapper";
+    final mapperName = "${model.className}XmlMapper";
     final className = model.className;
 
     final mapperClass = ClassBuilder()
@@ -273,7 +273,7 @@ return $className($fieldNames);
     final converter = converterInstance ?? _getDefaultConverter(fieldType);
 
     if (isNested) {
-      final nestedMapper = "Xml${fieldTypeName.replaceAll('?', '')}Mapper";
+      final nestedMapper = "${fieldTypeName.replaceAll('?', '')}XmlMapper";
       if (isNullable) {
         return '''
 final $attrVar = element.getAttribute("$attrName");
@@ -326,7 +326,7 @@ try {
     final elemVar = "elem_$fieldName";
 
     if (isNested) {
-      final nestedMapper = "Xml${fieldTypeName.replaceAll('?', '')}Mapper";
+      final nestedMapper = "${fieldTypeName.replaceAll('?', '')}XmlMapper";
       if (isNullable) {
         return '''
 final $elemVar = element.getElement("$elemName");
@@ -377,7 +377,7 @@ try {
   ) {
     final fieldTypeName = fieldType.getDisplayString();
     if (isNested) {
-      final nestedMapper = "Xml${fieldTypeName.replaceAll('?', '')}Mapper";
+      final nestedMapper = "${fieldTypeName.replaceAll('?', '')}XmlMapper";
       return "final $fieldName = $nestedMapper.parseElement(element);";
     }
 
@@ -420,7 +420,7 @@ try {
     final isNestedXmlClass = _isXmlAnnotatedClass(itemType);
 
     if (isNestedXmlClass) {
-      final itemMapperName = "Xml${itemType.element!.name}Mapper";
+      final itemMapperName = "${itemType.element!.name}XmlMapper";
       return '''
 final $fieldName = element.getElement("$listElemName")?.childElements
     .where((e) => e.name.local == "$childName")

@@ -6,7 +6,7 @@ part of 'advanced.dart';
 // XmlMapperGenerator
 // **************************************************************************
 
-final class XmlProjectMapper {
+final class ProjectXmlMapper {
   static Project parse(String text, {String? rootName}) {
     final document = XmlDocument.parse(text);
     final element = document.rootElement;
@@ -16,20 +16,20 @@ final class XmlProjectMapper {
       );
     }
 
-    return XmlProjectMapper._build(element);
+    return ProjectXmlMapper._build(element);
   }
 
   static Project parseFile(File file, {String? rootName}) {
     try {
       final text = file.readAsStringSync();
-      return XmlProjectMapper.parse(text, rootName: rootName);
+      return ProjectXmlMapper.parse(text, rootName: rootName);
     } on FileSystemException catch (e) {
       throw XmlMappingParserException('Failed to read file: ${e.message}');
     }
   }
 
   static Project parsePath(String path, {String? rootName}) {
-    return XmlProjectMapper.parseFile(File(path), rootName: rootName);
+    return ProjectXmlMapper.parseFile(File(path), rootName: rootName);
   }
 
   static Project parseElement(XmlElement xmlElement, {String? rootName}) {
@@ -38,7 +38,7 @@ final class XmlProjectMapper {
         'Expected root element "$rootName" but found "${xmlElement.name.local}"',
       );
     }
-    return XmlProjectMapper._build(xmlElement);
+    return ProjectXmlMapper._build(xmlElement);
   }
 
   static XmlElement toXml(Project instance) {
@@ -108,7 +108,7 @@ final class XmlProjectMapper {
             .getElement("tasks")
             ?.childElements
             .where((e) => e.name.local == "task")
-            .map((e) => XmlTaskMapper._build(e))
+            .map((e) => TaskXmlMapper._build(e))
             .toList() ??
         [];
 
@@ -126,7 +126,7 @@ final class XmlProjectMapper {
   }
 }
 
-final class XmlTaskMapper {
+final class TaskXmlMapper {
   static Task parse(String text, {String? rootName}) {
     final document = XmlDocument.parse(text);
     final element = document.rootElement;
@@ -136,20 +136,20 @@ final class XmlTaskMapper {
       );
     }
 
-    return XmlTaskMapper._build(element);
+    return TaskXmlMapper._build(element);
   }
 
   static Task parseFile(File file, {String? rootName}) {
     try {
       final text = file.readAsStringSync();
-      return XmlTaskMapper.parse(text, rootName: rootName);
+      return TaskXmlMapper.parse(text, rootName: rootName);
     } on FileSystemException catch (e) {
       throw XmlMappingParserException('Failed to read file: ${e.message}');
     }
   }
 
   static Task parsePath(String path, {String? rootName}) {
-    return XmlTaskMapper.parseFile(File(path), rootName: rootName);
+    return TaskXmlMapper.parseFile(File(path), rootName: rootName);
   }
 
   static Task parseElement(XmlElement xmlElement, {String? rootName}) {
@@ -158,7 +158,7 @@ final class XmlTaskMapper {
         'Expected root element "$rootName" but found "${xmlElement.name.local}"',
       );
     }
-    return XmlTaskMapper._build(xmlElement);
+    return TaskXmlMapper._build(xmlElement);
   }
 
   static XmlElement toXml(Task instance) {

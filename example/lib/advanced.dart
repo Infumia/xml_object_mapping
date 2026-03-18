@@ -90,7 +90,7 @@ void runAdvancedExample() {
   print("--- Advanced Example ---");
   print("Parsing project XML...");
 
-  final project = XmlProjectMapper.parse(xmlText);
+  final project = ProjectXmlMapper.parse(xmlText);
 
   print("Project ID: ${project.id}");
   print("Title: ${project.title}");
