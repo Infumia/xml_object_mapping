@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import "package:xml_object_mapping/xml_object_mapping.dart";
 
 part "advanced.g.dart";
