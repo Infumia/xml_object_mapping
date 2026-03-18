@@ -180,9 +180,7 @@ return $mapperName._build(xmlElement);
     final assignments = <String>[];
 
     for (final field in model.fields) {
-
       final fieldName = field.fieldName;
-      final fieldType = field.fieldType.getDisplayString();
       final isNullable = field.isNullable;
       final isNested = _isXmlAnnotatedClass(field.fieldType);
 
@@ -235,9 +233,7 @@ return $mapperName._build(xmlElement);
       assignments.add(extractionCode);
     }
 
-    final mappedFieldNames = model.fields
-        .map((f) => f.fieldName)
-        .toSet();
+    final mappedFieldNames = model.fields.map((f) => f.fieldName).toSet();
 
     final fieldNames = model.allFields
         .where((f) => mappedFieldNames.contains(f.name))

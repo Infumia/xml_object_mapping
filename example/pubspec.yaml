@@ -13,6 +13,6 @@ dependencies:
     path: ../packages/xml_object_mapping
 
 dev_dependencies:
-  build_runner: ^2.12.2
+  build_runner: ^2.13.0
   xml_object_mapping_generator:
     path: ../packages/xml_object_mapping_generator

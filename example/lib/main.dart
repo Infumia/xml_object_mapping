@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import "package:xml_object_mapping_example/advanced.dart";
 import "package:xml_object_mapping_example/models.dart";
 
