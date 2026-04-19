@@ -98,13 +98,13 @@ void main() {
 
 ## Annotations
 
-| Annotation                                                                        | Description                                   |
-|-----------------------------------------------------------------------------------|-----------------------------------------------|
-| `@XmlMap`                                                                         | Marks a class for XML mapping code generation |
-| `@XmlMapValue({XmlConverter? converter})`                                         | Maps the content of an XML element to a field |
-| `@XmlMapElement({String? overrideName, XmlConverter? converter})`                 | Maps an XML element to a field                |
-| `@XmlMapAttribute({String? overrideName, XmlConverter? converter})`               | Maps an XML attribute to a field              |
-| `@XmlMapList({String? overrideName, String? childName, XmlConverter? converter})` | Maps repeated elements to a `List` field      |
+| Annotation                                                                                   | Description                                   |
+|----------------------------------------------------------------------------------------------|-----------------------------------------------|
+| `@XmlMap`                                                                                    | Marks a class for XML mapping code generation |
+| `@XmlMapValue({XmlConverter? decorator, XmlConverter? converter})`                           | Maps the content of an XML element to a field |
+| `@XmlMapElement({String? overrideName, XmlConverter? decorator, XmlConverter? converter})`   | Maps an XML element to a field                |
+| `@XmlMapAttribute({String? overrideName, XmlConverter? decorator, XmlConverter? converter})` | Maps an XML attribute to a field              |
+| `@XmlMapList({String? overrideName, String? childName, XmlConverter? converter})`            | Maps repeated elements to a `List` field      |
 
 ## Supported Types
 
@@ -246,6 +246,44 @@ class PriceConverter implements XmlConverter<double> {
   @override
   double convert(String value) => double.parse(value.replaceAll(r"$", ""));
 }
+```
+
+### Decorators
+
+Use decorators to process the raw XML text value before it's converted. This is useful when the XML contains values in a different format than your Dart type expects:
+
+```xml
+<invoice>
+    <netPremium>12312,9900</netPremium>
+</invoice>
+```
+
+```dart
+class DecimalPointDecorator implements XmlConverter<String> {
+  const DecimalPointDecorator();
+
+  @override
+  String convert(String value) => value.replaceAll(',', '.');
+}
+
+@xmlMap
+class Invoice {
+  @XmlMapElement(decorator: DecimalPointDecorator())
+  final double netPremium;
+
+  Invoice({required this.netPremium});
+}
+```
+
+The generated code will apply the decorator first, then convert:
+
+```dart
+final elem_netPremium = element.getElement("netPremium");
+final netPremium = elem_netPremium != null
+    ? (const DoubleConverter().convert(
+        const DecimalPointDecorator().convert(elem_netPremium.text),
+      ) as double?)
+    : null;
 ```
 
 ### Map Types
