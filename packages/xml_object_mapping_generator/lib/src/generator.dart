@@ -204,6 +204,7 @@ return $mapperName._build(xmlElement);
           className,
           isNullable,
           field.converterInstance,
+          field.decoratorInstance,
           isNested,
         );
       } else if (field is XmlMapValueAnnotation) {
@@ -320,6 +321,7 @@ try {
     String className,
     bool isNullable,
     String? converterInstance,
+    String? decoratorInstance,
     bool isNested,
   ) {
     final fieldTypeName = fieldType.getDisplayString();
@@ -346,10 +348,14 @@ final $fieldName = $nestedMapper.parseElement($elemVar);
         ? (fieldTypeName.endsWith("?") ? fieldTypeName : "$fieldTypeName?")
         : fieldTypeName;
 
+    final decoratedValue = decoratorInstance != null
+        ? "$decoratorInstance.convert($elemVar.text)"
+        : "$elemVar.text";
+
     if (isNullable) {
       return '''
 final $elemVar = element.getElement("$elemName");
-final $fieldName = $elemVar != null ? ($converter.convert($elemVar.text) as $castType) : null;
+final $fieldName = $elemVar != null ? ($converter.convert($decoratedValue) as $castType) : null;
 ''';
     } else {
       return '''
@@ -359,7 +365,7 @@ if ($elemVar == null) {
 }
 $fieldTypeName $fieldName;
 try {
-  $fieldName = $converter.convert($elemVar.text) as $fieldTypeName;
+  $fieldName = $converter.convert($decoratedValue) as $fieldTypeName;
 } catch (e) {
   throw XmlMappingTypeConversionException($elemVar.text, "$fieldTypeName", reason: e.toString());
 }

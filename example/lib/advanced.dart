@@ -19,6 +19,13 @@ class ProjectStatusConverter extends XmlConverter<ProjectStatus> {
   String serialize(ProjectStatus value) => value.name;
 }
 
+class DecimalPointDecorator extends XmlConverter<String> {
+  const DecimalPointDecorator();
+
+  @override
+  String convert(String value) => value.replaceAll(",", ".");
+}
+
 @xmlMap
 class Project {
   @xmlMapAttribute
@@ -29,6 +36,9 @@ class Project {
 
   @XmlMapElement(converter: ProjectStatusConverter())
   final ProjectStatus status;
+
+  @XmlMapElement(decorator: DecimalPointDecorator())
+  final double budget;
 
   @XmlMapList(childName: "milestone", overrideName: "history")
   final List<String> milestones;
@@ -42,6 +52,7 @@ class Project {
     required this.id,
     required this.title,
     required this.status,
+    required this.budget,
     required this.milestones,
     required this.tasks,
     this.internalId = "SECRET-123",
@@ -49,7 +60,7 @@ class Project {
 
   @override
   String toString() =>
-      "Project(id: $id, title: $title, status: $status, milestones: $milestones, tasks: $tasks)";
+      "Project(id: $id, title: $title, status: $status, budget: $budget, milestones: $milestones, tasks: $tasks)";
 }
 
 @xmlMap
@@ -75,6 +86,7 @@ void runAdvancedExample() {
 <project id="PROJ-001">
   <title>AI XML Mapping Library</title>
   <status>active</status>
+  <budget>50000,99</budget>
   <history>
     <milestone>Project started</milestone>
     <milestone>First MVP released</milestone>
@@ -95,6 +107,7 @@ void runAdvancedExample() {
   print("Project ID: ${project.id}");
   print("Title: ${project.title}");
   print("Status: ${project.status}");
+  print("Budget: ${project.budget} (parsed with DecimalPointDecorator)");
   print("Milestones: ${project.milestones.join(', ')}");
   print("Tasks:");
   for (final task in project.tasks) {

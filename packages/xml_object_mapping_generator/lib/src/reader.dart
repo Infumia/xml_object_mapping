@@ -37,7 +37,6 @@ class XmlAnnotationReader {
     inPackage: "xml_object_mapping",
   );
 
-
   /// Checks if a class is annotated with `@xml`.
   static bool hasXmlAnnotation(ClassElement element) =>
       _xmlTypeChecker.hasAnnotationOf(element);
@@ -79,7 +78,6 @@ class XmlAnnotationReader {
         fields.add(_parseXmlList(field, ConstantReader(listAnnotation)));
         continue;
       }
-
     }
 
     return XmlClassModel(element, fields, allFields);
@@ -91,7 +89,8 @@ class XmlAnnotationReader {
   ) {
     final overrideName = _getStringAnnotationParam(annotation, "overrideName");
     final converter = _getConverterInstance(annotation);
-    return XmlMapElementAnnotation(field, converter, overrideName);
+    final decorator = _getConverterInstance(annotation, "decorator");
+    return XmlMapElementAnnotation(field, converter, overrideName, decorator);
   }
 
   static XmlMapAttributeAnnotation _parseXmlAttr(
@@ -128,8 +127,11 @@ class XmlAnnotationReader {
       ? null
       : annotation.read(paramName).stringValue;
 
-  static String? _getConverterInstance(ConstantReader annotation) {
-    final converterField = annotation.read("converter");
+  static String? _getConverterInstance(
+    ConstantReader annotation, [
+    String fieldName = "converter",
+  ]) {
+    final converterField = annotation.read(fieldName);
     if (converterField.isNull) {
       return null;
     }

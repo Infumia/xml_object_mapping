@@ -5,8 +5,11 @@ const xmlMapValue = XmlMapValue();
 
 /// Maps the content of an XML element to a field.
 class XmlMapValue {
+  /// Optional decorator for this field.
+  final XmlConverter<String>? decorator;
+
   /// Optional custom converter for this field.
   final XmlConverter<dynamic>? converter;
 
-  const XmlMapValue({this.converter});
+  const XmlMapValue({this.decorator, this.converter});
 }
