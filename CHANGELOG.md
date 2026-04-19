@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-04-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`xml_object_mapping` - `v1.1.0`](#xml_object_mapping---v110)
+
+---
+
+#### `xml_object_mapping` - `v1.1.0`
+
+ - Bump "xml_object_mapping" to `1.1.0`.
+
+
 ## 2026-03-18
 
 ### Changes
