@@ -1,3 +1,7 @@
+## 1.1.0
+
+ - Add decorators
+
 ## 1.0.2
 
  - **FIX**: rename generated class name to give the user to be able to make the class private.
