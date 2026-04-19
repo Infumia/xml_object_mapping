@@ -94,6 +94,25 @@ final class ProjectXmlMapper {
       );
     }
 
+    final elem_budget = element.getElement("budget");
+    if (elem_budget == null) {
+      throw XmlMappingMissingElementException("budget", "Project");
+    }
+    double budget;
+    try {
+      budget =
+          const DoubleConverter().convert(
+                const DecimalPointDecorator().convert(elem_budget.text),
+              )
+              as double;
+    } catch (e) {
+      throw XmlMappingTypeConversionException(
+        elem_budget.text,
+        "double",
+        reason: e.toString(),
+      );
+    }
+
     final milestones =
         element
             .getElement("history")
@@ -116,6 +135,7 @@ final class ProjectXmlMapper {
       id: id,
       title: title,
       status: status,
+      budget: budget,
       milestones: milestones,
       tasks: tasks,
     );
