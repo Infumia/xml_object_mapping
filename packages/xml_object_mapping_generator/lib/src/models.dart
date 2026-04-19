@@ -27,10 +27,14 @@ class XmlMapElementAnnotation extends XmlFieldAnnotation {
   /// The override name for the XML element.
   final String? overrideName;
 
+  /// The decorator instance, if any.
+  final String? decoratorInstance;
+
   XmlMapElementAnnotation(
     super.field,
     super.converterInstance,
     this.overrideName,
+    this.decoratorInstance,
   );
 
   /// The name to use for the XML element.
@@ -75,7 +79,6 @@ class XmlMapListAnnotation extends XmlFieldAnnotation {
   /// The name to use for the parent XML element.
   String get elementName => overrideName ?? fieldName;
 }
-
 
 /// Represents a parsed class for code generation.
 class XmlClassModel {
