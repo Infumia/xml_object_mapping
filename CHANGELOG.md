@@ -15,6 +15,27 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`xml_object_mapping_example` - `v1.1.2`](#xml_object_mapping_example---v112)
+
+---
+
+#### `xml_object_mapping_example` - `v1.1.2`
+
+ - **FIX**: rename generated class name to give the user to be able to make the class private.
+
+
+## 2026-04-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`xml_object_mapping_generator` - `v1.1.0`](#xml_object_mapping_generator---v110)
 
 ---
