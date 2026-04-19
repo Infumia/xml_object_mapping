@@ -1,3 +1,7 @@
+## 1.1.1
+
+ - Update versions
+
 ## 1.1.0
 
  - Add decorators

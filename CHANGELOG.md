@@ -15,6 +15,32 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`xml_object_mapping` - `v1.1.1`](#xml_object_mapping---v111)
+ - [`xml_object_mapping_generator` - `v1.1.1`](#xml_object_mapping_generator---v111)
+
+---
+
+#### `xml_object_mapping` - `v1.1.1`
+
+ - Update versions
+
+#### `xml_object_mapping_generator` - `v1.1.1`
+
+ - Update versions
+
+
+## 2026-04-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`xml_object_mapping_example` - `v1.1.2`](#xml_object_mapping_example---v112)
 
 ---
