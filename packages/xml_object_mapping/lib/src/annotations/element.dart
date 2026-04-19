@@ -8,8 +8,11 @@ class XmlMapElement {
   /// Optional override name for the XML element.
   final String? overrideName;
 
+  /// Optional decorator for this field.
+  final XmlConverter<String>? decorator;
+
   /// Optional custom converter for this field.
   final XmlConverter<dynamic>? converter;
 
-  const XmlMapElement({this.overrideName, this.converter});
+  const XmlMapElement({this.overrideName, this.decorator, this.converter});
 }
