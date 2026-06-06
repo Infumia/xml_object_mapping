@@ -8,4 +8,4 @@ environment:
   sdk: ^3.11.1
 
 dependencies:
-  xml: ^6.6.1
+  xml: ^7.0.1
