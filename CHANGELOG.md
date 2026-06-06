@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-06-06
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`xml_object_mapping` - `v1.1.2`](#xml_object_mapping---v112)
+ - [`xml_object_mapping_generator` - `v1.1.2`](#xml_object_mapping_generator---v112)
+
+---
+
+#### `xml_object_mapping` - `v1.1.2`
+
+ - **FIX**: rename generated class name to give the user to be able to make the class private.
+ - **FIX**: fix publish.
+
+#### `xml_object_mapping_generator` - `v1.1.2`
+
+ - **REFACTOR**: simplify dependencies.
+ - **FIX**: rename generated class name to give the user to be able to make the class private.
+ - **FIX**: fix publish.
+
+
 ## 2026-04-19
 
 ### Changes
