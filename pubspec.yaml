@@ -20,5 +20,3 @@ melos:
   scripts:
     fix:
       run: dart fix --apply && dart format .
-      exec:
-        concurrency: 2
